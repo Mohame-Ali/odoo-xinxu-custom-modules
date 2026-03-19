@@ -1,0 +1,9 @@
+[submodule "server-ux"]
+	path = server-ux
+	url = https://github.com/OCA/server-ux.git
+[submodule "oca_currency"]
+	path = oca_currency
+	url = https://github.com/OCA/currency.git
+[submodule "sale-workflow"]
+	path = sale-workflow
+	url = https://github.com/OCA/sale-workflow.git
