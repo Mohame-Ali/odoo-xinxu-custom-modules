@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         PAPER FORMAT
+    ============================================================ -->
+    <record id="paperformat_xinxu_facture" model="report.paperformat">
+        <field name="name">Xinxu A4 Facture Etranger</field>
+        <field name="default"       eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">8</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line"   eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- ============================================================
+         REPORT ACTION — account.move → Facturation > Imprimer
+    ============================================================ -->
+    <record id="action_report_xinxu_facture_foreign" model="ir.actions.report">
+        <field name="name">Facture Client Etranger (Xinxu)</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_invoice_xinxu.report_xinxu_facture_foreign_document</field>
+        <field name="report_file">custom_invoice_xinxu.report_xinxu_facture_foreign_document</field>
+        <field name="paperformat_id" ref="paperformat_xinxu_facture"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'FACTURE_%s' % (object.name)</field>
+    </record>
+
+    <template id="report_xinxu_facture_foreign_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 10px; color: #000;">
+
+                        <!-- =========================================
+                             SECTION 1 – COMPANY HEADER
+                             Bank info from custom xinxu_* fields
+                             (Settings > Companies > XINXU Banking tab)
+                        ========================================= -->
+                        <table width="100%" style="border: 1px solid #000; border-collapse: collapse; margin-bottom: 0;">
+                            <tr>
+                                <td style="vertical-align: top; width: 65%; padding: 5px 8px;">
+
+                                    <p style="margin: 0 0 4px 0; font-weight: bold; font-size: 16px; border-bottom: 1px solid #000; padding-bottom: 3px;">
+                                        <t t-esc="doc.company_id.name"/>
+                                    </p>
+
+                                    <p style="margin: 2px 0;">
+                                        <strong>Adresse :</strong>
+                                        <t t-esc="doc.company_id.street or ''"/>
+                                        <t t-if="doc.company_id.zip">, <t t-esc="doc.company_id.zip"/></t>
+                                        <t t-if="doc.company_id.city"> <t t-esc="doc.company_id.city"/></t>
+                                        <t t-if="doc.company_id.country_id"> - <t t-esc="doc.company_id.country_id.name"/></t>
+                                    </p>
+
+                                    <!-- MF from standard res.company.vat -->
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        MF: <t t-esc="doc.company_id.vat or '-'"/>
+                                    </p>
+
+                                    <!-- RIB: custom xinxu_rib field -->
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        RIB: <span t-field="doc.company_id.xinxu_rib"/>
+                                    </p>
+
+                                    <!-- Banque: custom xinxu_bank_name field -->
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        Banque: <span t-field="doc.company_id.xinxu_bank_name"/>
+                                    </p>
+
+                                    <!-- Agence: custom xinxu_bank_agency field -->
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        Agence: <span t-field="doc.company_id.xinxu_bank_agency"/>
+                                    </p>
+
+                                    <p style="margin: 4px 0 2px 0;">
+                                        <strong>Tel:</strong> <t t-esc="doc.company_id.phone or '-'"/>
+                                        <span style="margin-left: 20px;">
+                                            <strong>Email:</strong> <t t-esc="doc.company_id.email or '-'"/>
+                                        </span>
+                                    </p>
+                                </td>
+
+                                <td style="vertical-align: top; text-align: right; width: 35%; padding: 5px 8px;">
+                                    <t t-if="doc.company_id.logo">
+                                        <img t-att-src="'/web/image/res.company/%s/logo' % doc.company_id.id"
+                                             style="max-height: 80px; max-width: 160px;" alt="Logo"/>
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- =========================================
+                             SECTION 2 – FACTURE N° + DATE
+                        ========================================= -->
+                        <table width="100%" style="border: 1px solid #000; border-top: none; border-collapse: collapse; margin-bottom: 0; background-color: #f8f8f8;">
+                            <tr>
+                                <td style="font-weight: bold; text-align: center; padding: 5px 8px;">
+                                    FACTURE N&#176; : <t t-esc="doc.name"/>
+                                </td>
+                                <td style="font-weight: bold; text-align: right; white-space: nowrap; width: 25%; padding: 5px 8px;">
+                                    DATE:
+                                    <t t-if="doc.invoice_date">
+                                        <span t-field="doc.invoice_date" t-options='{"widget":"date","format":"dd/MM/yyyy"}'/>
+                                    </t>
+                                    <t t-else="">-</t>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- =========================================
+                             SECTION 3 – CLIENT BLOCK
+                             Matches old template layout exactly:
+                             Client | Code client
+                             Adresse (contact_address full string)
+                             TELEPHONE
+                        ========================================= -->
+                        <table width="100%" style="border: 1px solid #000; border-top: none; border-collapse: collapse; margin-bottom: 8px;">
+                            <tr>
+                                <td style="width: 60%; padding: 5px 8px; border: none;">
+                                    <strong>Client:</strong>
+                                    <span t-field="doc.partner_id.name"/>
+                                </td>
+                                <td style="width: 40%; padding: 5px 8px; border: none;">
+                                    <strong>Code client:</strong>
+                                    <t t-if="doc.partner_id.ref">
+                                        <span t-field="doc.partner_id.ref"/>
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding: 2px 8px; border: none;">
+                                    <strong>Adresse:</strong>
+                                    <span t-field="doc.partner_id.contact_address"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding: 2px 8px 5px 8px; border: none;">
+                                    <strong>TELEPHONE:</strong>
+                                    <t t-if="doc.partner_id.phone">
+                                        <span t-field="doc.partner_id.phone"/>
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- =========================================
+                             SECTION 4 – LINES TABLE
+                             Column headers use doc.currency_id.name
+                             (dynamic: DZD, EUR, TND, etc.)
+                             Prices: float widget, precision 3
+                             (renders as 45.360, not 45.36 DZD)
+                        ========================================= -->
+                        <table width="100%" style="border: 1px solid #000; border-collapse: collapse; font-size: 10px;">
+                            <thead>
+                                <tr style="background-color: #f0f0f0;">
+                                    <th style="border: 1px solid #000; padding: 5px;">Item Reference</th>
+                                    <th style="border: 1px solid #000; padding: 5px;">Description</th>
+                                    <th style="border: 1px solid #000; padding: 5px; text-align: center;">Qty</th>
+                                    <th style="border: 1px solid #000; padding: 5px; text-align: right;">
+                                        Unit price (<span t-field="doc.currency_id.name"/>)
+                                    </th>
+                                    <th style="border: 1px solid #000; padding: 5px; text-align: right;">
+                                        Total price (<span t-field="doc.currency_id.name"/>)
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <!-- Odoo 18: product lines have display_type='product'
+                                     (truthy). The old `not line.display_type` filter
+                                     evaluated to False for every product line and caused
+                                     an empty table.  Fixed: explicit equality check. -->
+                                <t t-foreach="doc.invoice_line_ids" t-as="line">
+                                    <t t-if="line.display_type == 'product'">
+                                        <tr>
+                                            <td style="border: 1px solid #000; padding: 5px;">
+                                                <span t-field="line.product_id.default_code"/>
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px;">
+                                                <span t-field="line.name"/>
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                                                <span t-field="line.quantity"/>
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: right;">
+                                                <span t-field="line.price_unit"
+                                                      t-options='{"widget":"float","precision":3}'/>
+                                            </td>
+                                            <td style="border: 1px solid #000; padding: 5px; text-align: right;">
+                                                <span t-field="line.price_subtotal"
+                                                      t-options='{"widget":"float","precision":3}'/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </tbody>
+
+                            <!--
+                                Single footer row — "Total CPT price"
+                                Float 3 decimals + currency name (e.g. 5,955.480 DZD)
+                            -->
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" style="border: 1px solid #000; padding: 5px;"/>
+                                    <td style="border: 1px solid #000; padding: 5px; text-align: right; font-weight: bold;">
+                                        Total CPT price
+                                    </td>
+                                    <td style="border: 1px solid #000; padding: 5px; text-align: right; font-weight: bold;">
+                                        <span t-field="doc.amount_total"
+                                              t-options='{"widget":"float","precision":3}'/>
+                                        &#160;<span t-field="doc.currency_id.name"/>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <!-- =========================================
+                             SECTION 5 – FOOTER NOTES
+                             "Total says" auto-computed via
+                             currency.amount_to_text(amount) —
+                             same method as the default invoice template.
+
+                             Delivery mode and Origin of goods come from
+                             custom fields on the invoice (editable in
+                             Facturation > invoice form > XINXU Export tab).
+                        ========================================= -->
+                        <div style="margin-top: 25px; font-size: 10px;">
+
+                            <p style="margin: 3px 0;">
+                                <strong>Total says:</strong>
+                                <t t-if="doc.currency_id and doc.currency_id.amount_to_text">
+                                    <span t-esc="doc.currency_id.amount_to_text(doc.amount_total)"/>
+                                </t>
+                            </p>
+
+                            <!-- xinxu_delivery_mode — default "CPT ALGERIA" -->
+                            <p style="margin: 3px 0;">
+                                <strong>Delivery mode:</strong>
+                                <span t-field="doc.xinxu_delivery_mode"/>
+                            </p>
+
+                            <!-- payment terms — standard field -->
+                            <p style="margin: 3px 0;">
+                                <strong>Payment terms:</strong>
+                                <t t-if="doc.invoice_payment_term_id">
+                                    <span t-field="doc.invoice_payment_term_id.name"/>
+                                </t>
+                                <t t-else="">-</t>
+                            </p>
+
+                            <!-- xinxu_origin_of_goods — default "TUNISIA" -->
+                            <p style="margin: 3px 0;">
+                                <strong>Origin of goods:</strong>
+                                <span t-field="doc.xinxu_origin_of_goods"/>
+                            </p>
+
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

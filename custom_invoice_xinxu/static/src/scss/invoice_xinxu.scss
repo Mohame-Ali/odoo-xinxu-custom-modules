@@ -1,0 +1,8 @@
+.xinxu-invoice {
+    font-family: Arial, sans-serif;
+    font-size: 11pt;
+    .header-box, .client-box, .invoice-header, table {
+        border: 1pt solid black;
+    }
+    th, td { padding: 6px; }
+}

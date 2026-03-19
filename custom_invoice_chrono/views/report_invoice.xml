@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_chrono" inherit_id="account.report_invoice_document">
+        
+        <xpath expr="//t[@t-call='web.external_layout']" position="replace">
+            <t t-call="web.external_layout">
+                <div class="page" style="font-family: 'Arial'; font-size: 13px;">
+                    
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <img t-if="res_company.logo" t-att-src="image_data_uri(res_company.logo)" style="max-height: 90px;"/>
+                        </div>
+                        <div class="col-6 text-end">
+                            <h2 style="color: #004a99;">FACTURE</h2>
+                            <strong>N° : </strong><span t-field="o.name"/><br/>
+                            <strong>Date : </strong><span t-field="o.invoice_date"/>
+                        </div>
+                    </div>
+
+                    <table class="table table-sm mt-4">
+                        <thead style="background-color: #004a99; color: white;">
+                            <tr>
+                                <th>Description</th>
+                                <th class="text-end">Quantité</th>
+                                <th class="text-end">P.U HT</th>
+                                <th class="text-end">Total HT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.invoice_line_ids" t-as="line">
+                                <td><span t-field="line.name"/></td>
+                                <td class="text-end"><span t-field="line.quantity"/></td>
+                                <td class="text-end"><span t-field="line.price_unit"/></td>
+                                <td class="text-end"><span t-field="line.price_subtotal"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </t>
+        </xpath>
+        
+    </template>
+</odoo>                           

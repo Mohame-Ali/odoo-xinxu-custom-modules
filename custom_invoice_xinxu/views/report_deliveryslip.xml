@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Template personnalisé pour le bon de livraison XINXU -->
+    <template id="report_delivery_xinxu">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page xinxu-delivery" style="font-family: 'WenQuanYi Zen Hei', 'DejaVu Sans', sans-serif; font-size: 12pt; color: black !important;">
+                        <style>
+                            .xinxu-delivery { font-family: 'WenQuanYi Zen Hei', 'DejaVu Sans', sans-serif !important; }
+                            .border-black { border: 1pt solid black; }
+                            .border-bottom-black { border-bottom: 1pt solid black; }
+                        </style>
+
+                        <!-- Bloc en-tête société -->
+                        <div class="border-black" style="padding: 8px; margin-top: 2cm; margin-bottom: 0.75cm;">
+                            <table width="100%" style="border-collapse: collapse; border: none;">
+                                <tr>
+                                    <td width="65%" style="vertical-align: top; border: none;">
+                                        <div class="border-bottom-black" style="padding-bottom: 5px; margin-bottom: 5px;">
+                                            <strong style="font-size: 30px;">XINXU COMPANY</strong>
+                                        </div>
+                                        <div style="line-height: 1.3;">
+                                            <strong>Adresse:</strong> <span t-field="doc.company_id.street"/><br/>
+                                            <strong>MF:</strong> 1726088RAM000<br/>
+                                            <strong>RIB:</strong> <span t-field="doc.company_id.xinxu_rib"/><br/>
+                                            <strong>Banque:</strong> <span t-field="doc.company_id.xinxu_bank_name"/><br/>
+                                            <strong>Agence:</strong> <span t-field="doc.company_id.xinxu_bank_agency"/><br/>
+                                            <strong>Tél:</strong> <span t-field="doc.company_id.phone"/>
+                                            <t t-if="doc.company_id.email">
+                                                <span style="margin-left: 15px;"> </span>
+                                                <strong>Email:</strong> <span t-field="doc.company_id.email"/>
+                                            </t>
+                                        </div>
+                                    </td>
+                                    <td width="35%" style="vertical-align: top; text-align: right; border: none;">
+                                        <img t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)" style="max-height: 60px;"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Titre et numéro du bon -->
+                        <div class="border-black" style="padding: 6px; margin-bottom: 0.75cm; background-color: #f8f8f8;">
+                            <table width="100%" style="border-collapse: collapse; border: none;">
+                                <tr>
+                                    <td style="font-weight: bold; text-align: center; border: none;">
+                                        Bon de livraison N°: <span t-field="doc.name"/>
+                                    </td>
+                                    <td style="font-weight: bold; text-align: right; border: none;">
+                                        DATE: <span t-field="doc.scheduled_date" t-options='{"format": "dd/MM/yyyy"}'/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Bloc client -->
+                        <div class="border-black" style="padding: 8px; margin-bottom: 0.75cm;">
+                            <table width="100%" style="border-collapse: collapse; border: none;">
+                                <tr>
+                                    <td width="50%" style="border: none;"><strong>Client :</strong> <span t-field="doc.partner_id.name"/></td>
+                                    <td width="50%" style="border: none;"><strong>Code client :</strong> <span t-field="doc.partner_id.ref"/></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td colspan="2" style="border: none;"><strong>Adresse :</strong> <span t-field="doc.partner_id.contact_address"/></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td colspan="2" style="border: none;"><strong>R.C. :</strong> <span t-field="doc.partner_id.company_registry"/></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="border: none;"><strong>Bon de commande N° :</strong> <span t-field="doc.origin"/></td>
+                                    <td style="border: none;">
+                                        <strong>Date de la commande :</strong>
+                                        <t t-if="doc.sale_id"><span t-field="doc.sale_id.date_order" t-options='{"format": "dd/MM/yyyy"}'/></t>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="border: none;">
+                                        <strong>Contact :</strong>
+                                        <t t-if="doc.partner_id.child_ids">
+                                            <t t-foreach="doc.partner_id.child_ids" t-as="contact">
+                                                <t t-if="contact.type == 'contact'">
+                                                    <span t-field="contact.name"/>
+                                                </t>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-field="doc.partner_id.name"/>
+                                        </t>
+                                    </td>
+                                    <td style="border: none;"><strong>FACTURE N° :</strong></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td colspan="2" style="border: none;"><strong>Email :</strong> <span t-field="doc.partner_id.email"/></td>
+                                </tr>
+                                
+                                <tr>
+                                    <td colspan="2" style="border: none;"><strong>TÉLÉPHONE :</strong> <span t-field="doc.partner_id.phone"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Tableau des produits -->
+                        <table class="border-black" style="border-collapse: collapse; width: 100%; margin-bottom: 1.5cm;">
+                            <thead>
+                                <tr style="background-color: #f0f0f0;">
+                                    <th style="border: 1pt solid black; padding: 5px;">Référence</th>
+                                    <th style="border: 1pt solid black; padding: 5px;">Désignation</th>
+                                    <th style="border: 1pt solid black; padding: 5px; text-align: center;">Qté</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.move_ids_without_package" t-as="move">
+                                    <tr>
+                                        <td style="border: 1pt solid black; padding: 5px;"><span t-field="move.product_id.default_code"/></td>
+                                        <td style="border: 1pt solid black; padding: 5px;"><span t-field="move.product_id.name"/></td>
+                                        <td style="border: 1pt solid black; padding: 5px; text-align: center;">
+                                            <span t-field="move.product_uom_qty"/> <span t-field="move.product_uom"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Signatures -->
+                        <div style="display: flex;">
+                            <div style="border: 1px solid black; padding: 10px; width: 250px; height: 150px; display: flex; flex-direction: column; justify-content: space-between; margin-right: 450px;">
+                                <strong>Signature et Cachet du Client</strong>
+                                <span>Reçue Conforme</span>
+                            </div>
+                            <div style="border: 1px solid black; padding: 10px; width: 250px; height: 150px;">
+                                <strong>Signature et Cachet</strong>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Action de rapport -->
+    <record id="action_report_delivery_xinxu" model="ir.actions.report">
+        <field name="name">XINXU Bon de livraison</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_invoice_xinxu.report_delivery_xinxu</field>
+        <field name="report_file">custom_invoice_xinxu.report_delivery_xinxu</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+        <field name="binding_view_types">list,form</field>
+    </record>
+        <!-- Remplacer le rapport par défaut -->
+    <record id="stock.action_report_delivery" model="ir.actions.report">
+        <field name="report_name">custom_invoice_xinxu.report_delivery_xinxu</field>
+        <field name="report_file">custom_invoice_xinxu.report_delivery_xinxu</field>
+    </record>
+</odoo>

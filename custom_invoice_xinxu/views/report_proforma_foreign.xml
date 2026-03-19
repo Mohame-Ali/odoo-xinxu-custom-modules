@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         PAPER FORMAT  (shared – already declared in the local invoice
+         file; if both files are loaded, keep only ONE declaration)
+    ============================================================ -->
+    <record id="paperformat_xinxu_invoice" model="report.paperformat">
+        <field name="name">Xinxu A4 Invoice</field>
+        <field name="default"       eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line"   eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- ============================================================
+         REPORT ACTION
+    ============================================================ -->
+    <record id="action_report_xinxu_proforma_foreign" model="ir.actions.report">
+        <field name="name">Proforma Invoice (client étranger)</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_invoice_xinxu.report_xinxu_proforma_foreign_document</field>
+        <field name="report_file">custom_invoice_xinxu.report_xinxu_proforma_foreign_document</field>
+        <field name="paperformat_id" ref="paperformat_xinxu_invoice"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'proforma_client_etranger_%s' % (object.name)</field>
+    </record>
+
+    <!--
+    ================================================================
+    SAFE-FIELD POLICY
+    ================================================================
+    Only fields GUARANTEED on a standard sale.order are referenced.
+    Fields intentionally NOT used (absent without optional modules):
+      • incoterm_id   (sale_stock)   → replaced by doc.note
+      • carrier_id    (delivery)     → replaced by doc.note
+      • freight_amount (custom)      → static "0.00" displayed
+      • partner_id.fax (not always)  → shown only if truthy
+
+    Fields used that ARE standard in all Odoo installations:
+      • doc.name, date_order, partner_id.*, company_id.*
+      • doc.order_line.*, currency_id, amount_total
+      • doc.commitment_date, payment_term_id, note
+      • res.partner.company_registry (standard since Odoo 16)
+    ================================================================
+    -->
+    <template id="report_xinxu_proforma_foreign_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+
+                    <div class="page"
+                         style="font-family: Arial, sans-serif; font-size: 11px; color: #000;">
+
+                        <!-- Pre-compute company bank once for the whole document -->
+                        <t t-set="cbank" t-value="doc.company_id.partner_id.bank_ids[:1]"/>
+
+                        <!-- ══════════════════════════════════════════
+                             SECTION 1 – COMPANY HEADER
+                        ══════════════════════════════════════════ -->
+                        <table width="100%"
+                               style="border-bottom: 2px solid #000;
+                                      margin-bottom: 6px;
+                                      border-collapse: collapse;">
+                            <tr>
+                                <!-- Left : company details -->
+                                <td style="vertical-align: top; width: 65%;
+                                           padding: 0 8px 6px 0;">
+
+                                    <h1 style="font-size: 26px; font-weight: 900;
+                                               letter-spacing: 2px;
+                                               text-transform: uppercase;
+                                               margin: 0 0 6px 0; color: #000;">
+                                        <t t-esc="doc.company_id.name"/>
+                                    </h1>
+
+                                    <!-- Address: inline parts, no list-building -->
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        Address&#160;:&#160;
+                                        <t t-esc="doc.company_id.street or ''"/>
+                                        <t t-if="doc.company_id.zip">
+                                            ,&#160;<t t-esc="doc.company_id.zip"/>
+                                        </t>
+                                        <t t-if="doc.company_id.city">
+                                            &#160;<t t-esc="doc.company_id.city"/>
+                                        </t>
+                                        <t t-if="doc.company_id.country_id">
+                                            &#160;&#8211;&#160;<t t-esc="doc.company_id.country_id.name"/>
+                                        </t>
+                                    </p>
+
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        RC&#160;:&#160;
+                                        <t t-esc="doc.company_id.company_registry or '-'"/>
+                                    </p>
+
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        MF&#160;:&#160;
+                                        <t t-esc="doc.company_id.vat or '-'"/>
+                                    </p>
+
+                                    <!-- IBAN from res.partner.bank_ids -->
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        IBAN&#160;:&#160;
+                                        <t t-if="cbank">
+                                            <t t-esc="cbank[0].acc_number or '-'"/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </p>
+
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        CODE SWIFT (Bic)&#160;:&#160;
+                                        <t t-if="cbank and cbank[0].bank_id and cbank[0].bank_id.bic">
+                                            <t t-esc="cbank[0].bank_id.bic"/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </p>
+
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        RIB&#160;:&#160;
+                                        <t t-if="cbank">
+                                            <t t-esc="cbank[0].acc_number or '-'"/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </p>
+
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        Banque&#160;:&#160;
+                                        <t t-if="cbank and cbank[0].bank_id and cbank[0].bank_id.name">
+                                            <t t-esc="cbank[0].bank_id.name"/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </p>
+
+                                    <p style="margin: 8px 0 4px 0;">
+                                        <span style="font-weight: bold;">Tel&#160;:</span>
+                                        &#160;<t t-esc="doc.company_id.phone or '-'"/>
+                                        &#160;&#160;&#160;
+                                        <span style="font-weight: bold;"><em>Email&#160;:</em></span>
+                                        &#160;<t t-esc="doc.company_id.email or '-'"/>
+                                    </p>
+                                </td>
+
+                                <!-- Right : logo -->
+                                <td style="vertical-align: top; text-align: right;
+                                           width: 35%; padding: 0 0 6px 0;">
+                                    <t t-if="doc.company_id.logo">
+                                        <img t-att-src="'/web/image/res.company/%s/logo'
+                                                        % doc.company_id.id"
+                                             style="max-height: 90px; max-width: 180px;"
+                                             alt="Logo"/>
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ══════════════════════════════════════════
+                             SECTION 2 – INVOICE TITLE BAR
+                        ══════════════════════════════════════════ -->
+                        <table width="100%"
+                               style="margin-bottom: 6px; border-collapse: collapse;">
+                            <tr>
+                                <td style="text-align: center; width: 70%;
+                                           vertical-align: middle;">
+                                    <span style="font-weight: 900; font-size: 14px;
+                                                 letter-spacing: 1px;
+                                                 text-transform: uppercase;">
+                                        PROFORMA INVOICE N&#176;&#160;:&#160;
+                                        <t t-esc="doc.name"/>
+                                    </span>
+                                </td>
+                                <td style="text-align: right; width: 30%;
+                                           vertical-align: middle;">
+                                    <span style="font-weight: bold; font-size: 11px;">
+                                        Date&#160;:&#160;
+                                        <span t-field="doc.date_order"
+                                              t-options='{"widget": "date"}'/>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ══════════════════════════════════════════
+                             SECTION 3 – CLIENT BLOCK
+                             Foreign layout: R.C. / NtF N / MS N /
+                             Email / TELEPHONE (+ optional Fax)
+                        ══════════════════════════════════════════ -->
+                        <table width="100%"
+                               style="border: 1px solid #000;
+                                      margin-bottom: 10px;
+                                      border-collapse: collapse;">
+                            <tr>
+                                <!-- Left : client details -->
+                                <td style="vertical-align: top; width: 65%;
+                                           padding: 4px 8px;">
+
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        Client&#160;:&#160;
+                                        <t t-esc="doc.partner_id.name or '-'"/>
+                                    </p>
+
+                                    <!-- Full address with street2 support -->
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        Adresse&#160;:&#160;
+                                        <t t-esc="doc.partner_id.street or ''"/>
+                                        <t t-if="doc.partner_id.street2">
+                                            ,&#160;<t t-esc="doc.partner_id.street2"/>
+                                        </t>
+                                        <t t-if="doc.partner_id.city">
+                                            ,&#160;<t t-esc="doc.partner_id.city"/>
+                                        </t>
+                                        <t t-if="doc.partner_id.zip">
+                                            &#160;<t t-esc="doc.partner_id.zip"/>
+                                        </t>
+                                        <t t-if="doc.partner_id.country_id">
+                                            ,&#160;<t t-esc="doc.partner_id.country_id.name"/>
+                                        </t>
+                                    </p>
+
+                                    <!--
+                                        R.C. → company_registry (standard res.partner field,
+                                               Odoo 16+; falls back to '-' if empty)
+                                        NtF N / MS N → not in standard Odoo.
+                                               Add x_ntf_number / x_ms_number Float/Char
+                                               fields to res.partner in your module and
+                                               replace the '-' below with:
+                                                   t-esc="doc.partner_id.x_ntf_number or '-'"
+                                    -->
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        R.C.&#160;:&#160;
+                                        <t t-esc="doc.partner_id.company_registry or '-'"/>
+                                    </p>
+
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        NtF N&#160;&#160;
+                                        <t t-esc="doc.partner_id.vat or '-'"/>
+                                    </p>
+
+                                    <!--
+                                        MS N → no standard field; store in partner.comment
+                                        or a custom Char field x_ms_number.
+                                    -->
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        MS N.&#160;&#160;-
+                                    </p>
+
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        Email&#160;:&#160;
+                                        <t t-esc="doc.partner_id.email or '-'"/>
+                                    </p>
+
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        T&#201;L&#201;PHONE&#160;:&#160;
+                                        <t t-esc="doc.partner_id.phone or '-'"/>
+                                        <t t-if="doc.partner_id.mobile">
+                                            &#160;/&#160;Fax&#160;:&#160;
+                                            <t t-esc="doc.partner_id.mobile"/>
+                                        </t>
+                                    </p>
+                                </td>
+
+                                <!-- Right : code client -->
+                                <td style="vertical-align: top; width: 35%;
+                                           padding: 4px 8px;">
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        Code client&#160;:&#160;
+                                        <t t-esc="doc.partner_id.ref or '-'"/>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ══════════════════════════════════════════
+                             SECTION 4 – ORDER LINES TABLE
+                             Foreign layout (matches PDF):
+                               Item Reference | N° | Description | Photo
+                               | Unit | Qty | Unit price (Euros) | Total price (Euros)
+                             No TVA columns. Prices in order currency (€).
+                        ══════════════════════════════════════════ -->
+                        <table width="100%"
+                               style="border-collapse: collapse; font-size: 11px;">
+                            <thead>
+                                <tr style="background-color: #d9d9d9;">
+                                    <th style="border:1px solid #000; padding:5px 4px;
+                                               text-align:center; font-weight:bold;
+                                               width:12%;">Item Reference</th>
+                                    <th style="border:1px solid #000; padding:5px 4px;
+                                               text-align:center; font-weight:bold;
+                                               width:5%;">N&#176;</th>
+                                    <th style="border:1px solid #000; padding:5px 4px;
+                                               text-align:center; font-weight:bold;
+                                               width:25%;">Description</th>
+                                    <th style="border:1px solid #000; padding:5px 4px;
+                                               text-align:center; font-weight:bold;
+                                               width:14%;">Photo</th>
+                                    <th style="border:1px solid #000; padding:5px 4px;
+                                               text-align:center; font-weight:bold;
+                                               width:7%;">Unit</th>
+                                    <th style="border:1px solid #000; padding:5px 4px;
+                                               text-align:center; font-weight:bold;
+                                               width:7%;">Qty</th>
+                                    <th style="border:1px solid #000; padding:5px 4px;
+                                               text-align:center; font-weight:bold;
+                                               width:15%;">Unit price<br/>(<t t-esc="doc.currency_id.name"/>)</th>
+                                    <th style="border:1px solid #000; padding:5px 4px;
+                                               text-align:center; font-weight:bold;
+                                               width:15%;">Total price<br/>(<t t-esc="doc.currency_id.name"/>)</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <t t-foreach="doc.order_line" t-as="line">
+                                    <tr>
+                                        <!-- Item Reference = internal reference (default_code) -->
+                                        <td style="border:1px solid #000; padding:8px 4px;
+                                                   text-align:center; vertical-align:middle;
+                                                   font-weight:bold;">
+                                            <t t-esc="line.product_id.default_code or '-'"/>
+                                        </td>
+
+                                        <!-- N° (sequential line number) -->
+                                        <td style="border:1px solid #000; padding:8px 4px;
+                                                   text-align:center; vertical-align:middle;">
+                                            <t t-esc="line_index + 1"/>
+                                        </td>
+
+                                        <!-- Description: product name + sales description -->
+                                        <td style="border:1px solid #000; padding:8px 6px;
+                                                   text-align:left; vertical-align:middle;">
+                                            <strong>
+                                                <t t-esc="line.product_id.name or '-'"/>
+                                            </strong>
+                                            <t t-if="line.name and line.name != line.product_id.name">
+                                                <br/>
+                                                <span style="font-size:10px;">
+                                                    <t t-esc="line.name"/>
+                                                </span>
+                                            </t>
+                                        </td>
+
+                                        <!-- Photo -->
+                                        <td style="border:1px solid #000; padding:8px 4px;
+                                                   text-align:center; vertical-align:middle;">
+                                            <t t-if="line.product_id.image_128">
+                                                <img t-att-src="'/web/image/product.product/%s/image_128'
+                                                                % line.product_id.id"
+                                                     style="max-height:70px; max-width:90px;"
+                                                     alt=""/>
+                                            </t>
+                                        </td>
+
+                                        <!-- Unit -->
+                                        <td style="border:1px solid #000; padding:8px 4px;
+                                                   text-align:center; vertical-align:middle;">
+                                            <t t-if="line.product_uom">
+                                                <t t-esc="line.product_uom.name"/>
+                                            </t>
+                                            <t t-else="">pc</t>
+                                        </td>
+
+                                        <!-- Qty -->
+                                        <td style="border:1px solid #000; padding:8px 4px;
+                                                   text-align:center; vertical-align:middle;">
+                                            <span t-field="line.product_uom_qty"
+                                                  t-options='{"widget":"integer"}'/>
+                                        </td>
+
+                                        <!-- Unit price (order currency = Euros for foreign) -->
+                                        <td style="border:1px solid #000; padding:8px 4px;
+                                                   text-align:center; vertical-align:middle;">
+                                            <span t-field="line.price_unit"
+                                                  t-options='{"widget":"monetary",
+                                                              "display_currency":doc.currency_id}'/>
+                                        </td>
+
+                                        <!-- Total price = price_subtotal (HTVA, excl. tax) -->
+                                        <td style="border:1px solid #000; padding:8px 4px;
+                                                   text-align:center; vertical-align:middle;">
+                                            <span t-field="line.price_subtotal"
+                                                  t-options='{"widget":"monetary",
+                                                              "display_currency":doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+
+                            <tfoot>
+                                <!-- Total CPT price -->
+                                <tr>
+                                    <td colspan="7"
+                                        style="border:1px solid #000; padding:5px 6px;
+                                               text-align:center; font-weight:bold;">
+                                        Total CPT price 
+                                    </td>
+                                    <td style="border:1px solid #000; padding:5px 6px;
+                                               text-align:center; font-weight:bold;">
+                                        <span t-field="doc.amount_untaxed"
+                                              t-options='{"widget":"monetary",
+                                                          "display_currency":doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <!-- ══════════════════════════════════════════
+                             AMOUNT IN WORDS
+                             Uses doc.note to store the amount-in-words
+                             sentence (enter it manually per order in the
+                             "Terms &amp; Conditions" field of the SO).
+                             If the field is empty nothing is shown.
+                        ══════════════════════════════════════════ -->
+                        <t t-if="doc.note">
+                            <p style="margin: 6px 0 4px 0;
+                                      font-weight: bold; font-size: 11px;">
+                                <t t-esc="doc.note"/>
+                            </p>
+                        </t>
+
+                        <!-- ══════════════════════════════════════════
+                             SECTION 5 – FOOTER TERMS
+                             All three labels always rendered.
+                             Safe fields only (no incoterm_id / carrier_id).
+                             doc.note is used for Mode de livraison above,
+                             so we use dedicated t-if guards here.
+                        ══════════════════════════════════════════ -->
+                        <table width="100%"
+                               style="margin-top: 8px; border-collapse: collapse;">
+                            <tr>
+                                <td style="vertical-align: top; padding: 4px 0;">
+
+                                    <!--
+                                        Delivery mode:
+                                        Enter the delivery / incoterm text in the
+                                        sale order's "Customer Reference" field
+                                        (doc.client_order_ref) or use doc.note.
+                                        Here we use client_order_ref as a short free-text
+                                        delivery mode; fallback to '-'.
+                                    -->
+                                    <p style="margin: 4px 0; font-weight: bold;
+                                              font-size: 10px;">
+                                        Delivery mode&#160;:&#160;
+                                        <t t-if="doc.client_order_ref">
+                                            <t t-esc="doc.client_order_ref"/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </p>
+
+                                    <!--
+                                        Delivery time:
+                                        doc.commitment_date = "Scheduled Date" on SO
+                                        (guaranteed standard field, may be False).
+                                    -->
+                                    <p style="margin: 4px 0; font-weight: bold;
+                                              font-size: 10px;">
+                                        Delivery time&#160;:&#160;
+                                        <t t-if="doc.commitment_date">
+                                            <span t-field="doc.commitment_date"
+                                                  t-options='{"widget": "date"}'/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </p>
+
+                                    <!--
+                                        Payment terms:
+                                        doc.payment_term_id guaranteed on sale.order.
+                                    -->
+                                    <p style="margin: 4px 0; font-weight: bold;
+                                              font-size: 10px;">
+                                        Payment terms&#160;:&#160;
+                                        <t t-if="doc.payment_term_id">
+                                            <t t-esc="doc.payment_term_id.name"/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </p>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div><!-- /page -->
+                </t><!-- /web.external_layout -->
+            </t><!-- /t-foreach docs -->
+        </t><!-- /web.html_container -->
+    </template>
+
+</odoo>

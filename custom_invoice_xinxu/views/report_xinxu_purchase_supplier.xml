@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         PAPER FORMAT
+    ============================================================ -->
+    <record id="paperformat_xinxu_bc" model="report.paperformat">
+        <field name="name">Xinxu A4 Bon de Commande</field>
+        <field name="default"       eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">8</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line"   eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- ============================================================
+         REPORT ACTION  (bound to purchase.order)
+    ============================================================ -->
+    <record id="action_report_xinxu_bc_foreign" model="ir.actions.report">
+        <field name="name">Bon de commande</field>
+        <field name="model">purchase.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_invoice_xinxu.report_xinxu_purchase_supplier_document</field>
+        <field name="report_file">custom_invoice_xinxu.report_xinxu_purchase_supplier_document</field>
+        <field name="paperformat_id" ref="paperformat_xinxu_bc"/>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'BON_DE_COMMANDE_%s' % (object.name)</field>
+    </record>
+
+    <!--
+    ================================================================
+    SAFE-FIELD POLICY  (purchase.order — standard Odoo 18)
+    ================================================================
+    All fields used here are GUARANTEED on purchase.order without
+    any optional module.  Fields that do NOT exist on the model are
+    never referenced, even inside t-if.
+
+    GUARANTEED fields used:
+      doc.name                    PO reference number
+      doc.date_order              Order date
+      doc.partner_id.*            Supplier (res.partner)
+      doc.company_id.*            Buyer company (res.company)
+      doc.order_line              purchase.order.line recordset
+        line.product_id.*         product.product
+        line.product_id.default_code
+        line.product_qty          Ordered quantity
+        line.price_unit           Unit price
+        line.price_subtotal       Line total (excl. tax)
+        line.product_uom          Unit of measure
+        line.currency_id          Line currency  (may differ from doc)
+      doc.currency_id             PO currency
+      doc.amount_untaxed          Total H.T.
+      doc.amount_tax              Taxes total
+      doc.amount_total            Total T.T.C.
+      doc.payment_term_id         Payment terms
+      doc.notes                   Internal notes / NB field
+      doc.company_id.partner_id.bank_ids[:1]  Company bank
+
+    NOT used (absent on standard purchase.order):
+      incoterm_id  → static "-" or doc.notes for mode de transport
+      carrier_id   → absent without delivery module
+      freight_amount → custom field, not standard
+    ================================================================
+    -->
+    <template id="report_xinxu_purchase_supplier_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <!-- Suppress Odoo's default external header/footer for full control -->
+                <t t-call="web.external_layout">
+
+                    <div class="page"
+                         style="font-family: Arial, sans-serif;
+                                font-size: 10px; color: #000;">
+
+                        <!-- Pre-compute company bank -->
+                        <t t-set="cbank"
+                           t-value="doc.company_id.partner_id.bank_ids[:1]"/>
+
+                        <!-- ══════════════════════════════════════════
+                             SECTION 1 – TOP BAR
+                             Logo (left) | Date (right)
+                             BON DE COMMANDE N° | Adressé à
+                        ══════════════════════════════════════════ -->
+                        <table width="100%"
+                               style="border-collapse: collapse;
+                                      margin-bottom: 4px;">
+                            <tr>
+                                <!-- Logo -->
+                                <td style="vertical-align: top;
+                                           width: 30%; padding: 0;">
+                                    <t t-if="doc.company_id.logo">
+                                        <img t-att-src="'/web/image/res.company/%s/logo'
+                                                        % doc.company_id.id"
+                                             style="max-height: 70px;
+                                                    max-width: 160px;"
+                                             alt="Logo"/>
+                                    </t>
+                                </td>
+
+                                <!-- Title block -->
+                                <td style="vertical-align: top;
+                                           width: 70%; text-align: right;
+                                           padding: 0;">
+
+                                    <!-- Date top-right -->
+                                    <p style="margin: 0 0 6px 0;
+                                              font-weight: bold;
+                                              font-size: 11px;">
+                                        <span t-field="doc.date_order"
+                                              t-options='{"widget": "date"}'/>
+                                    </p>
+
+                                    <!-- BON DE COMMANDE N° -->
+                                    <p style="margin: 0 0 4px 0;">
+                                        <span style="font-size: 14px;
+                                                     font-weight: 900;
+                                                     text-transform: uppercase;
+                                                     letter-spacing: 1px;">
+                                            BON DE COMMANDE N&#176;&#160;:&#160;
+                                        </span>
+                                        <span style="font-size: 13px;
+                                                     font-weight: bold;
+                                                     border: 1px solid #000;
+                                                     padding: 2px 8px;">
+                                            <t t-esc="doc.name"/>
+                                        </span>
+                                    </p>
+
+                                    <!-- Adressé à (partner internal ref / code) -->
+                                    <p style="margin: 0; font-weight: bold;
+                                              font-size: 12px;">
+                                        Adress&#233;&#160;&#224;&#160;:&#160;
+                                        <t t-esc="doc.partner_id.ref or doc.partner_id.name or '-'"/>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ══════════════════════════════════════════
+                             SECTION 2 – TWO-COLUMN INFO BLOCK
+                             Left  : XINXU (buyer / company)
+                             Right : Supplier (partner) details
+                        ══════════════════════════════════════════ -->
+                        <table width="100%"
+                               style="border-collapse: collapse;
+                                      margin-bottom: 8px;">
+                            <tr>
+                                <!-- ── Left : Company (XINXU) ── -->
+                                <td style="vertical-align: top;
+                                           width: 48%;
+                                           padding: 4px 8px 4px 0;">
+
+                                    <p style="margin: 2px 0;
+                                              font-weight: bold;
+                                              font-size: 12px;">
+                                        <t t-esc="doc.company_id.name"/>
+                                    </p>
+
+                                    <p style="margin: 2px 0;">
+                                        Adresse&#160;:&#160;
+                                        <t t-esc="doc.company_id.street or ''"/>
+                                        <t t-if="doc.company_id.city">
+                                        </t>
+                                        <t t-if="doc.company_id.zip">
+                                            &#160;<t t-esc="doc.company_id.zip"/>
+                                        </t>
+                                        <t t-if="doc.company_id.country_id">
+                                            &#160;<t t-esc="doc.company_id.country_id.name"/>
+                                        </t>
+                                    </p>
+
+                                    <p style="margin: 2px 0;">
+                                        T&#233;l.&#160;:&#160;
+                                        <t t-esc="doc.company_id.phone or '-'"/>
+                                    </p>
+
+                                    <p style="margin: 2px 0;">
+                                        RC&#160;:&#160;
+                                        <t t-esc="doc.company_id.company_registry or '-'"/>
+                                        &#160;&#8211;&#160;MF&#160;:&#160;
+                                        <t t-esc="doc.company_id.vat or '-'"/>
+                                    </p>
+                                </td>
+
+                                <!-- Divider spacer -->
+                                <td style="width: 4%;"></td>
+
+                                <!-- ── Right : Supplier (partner) ── -->
+                                <td style="vertical-align: top;
+                                           width: 48%;
+                                           border: 1px solid #000;
+                                           padding: 4px 8px;">
+
+                                    <p style="margin: 2px 0;
+                                              font-weight: bold;">
+                                        <t t-esc="doc.partner_id.name or '-'"/>
+                                    </p>
+
+                                    <t t-if="doc.partner_id.street">
+                                        <p style="margin: 2px 0;">
+                                            <t t-esc="doc.partner_id.street"/>
+                                        </p>
+                                    </t>
+                                    <t t-if="doc.partner_id.street2">
+                                        <p style="margin: 2px 0;">
+                                            <t t-esc="doc.partner_id.street2"/>
+                                        </p>
+                                    </t>
+                                    <t t-if="doc.partner_id.city or doc.partner_id.zip">
+                                        <p style="margin: 2px 0;">
+                                            <t t-esc="doc.partner_id.city or ''"/>
+                                            <t t-if="doc.partner_id.zip">
+                                                &#160;<t t-esc="doc.partner_id.zip"/>
+                                            </t>
+                                        </p>
+                                    </t>
+                                    <t t-if="doc.partner_id.country_id">
+                                        <p style="margin: 2px 0;">
+                                            <t t-esc="doc.partner_id.country_id.name"/>
+                                        </p>
+                                    </t>
+
+                                    <t t-if="doc.partner_id.phone">
+                                        <p style="margin: 2px 0;">
+                                            Tel&#160;:&#160;
+                                            <t t-esc="doc.partner_id.phone"/>
+                                            <t t-if="doc.partner_id.mobile">
+                                                &#160;Fax&#160;:&#160;
+                                                <t t-esc="doc.partner_id.mobile"/>
+                                            </t>
+                                        </p>
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ══════════════════════════════════════════
+                             SECTION 3 – INTRO SENTENCE
+                        ══════════════════════════════════════════ -->
+                        <p style="margin: 6px 0 8px 0;
+                                  font-weight: bold;
+                                  font-size: 11px;">
+                            Nous avons le plaisir de vous passer commande ferme pour&#160;:
+                        </p>
+
+                        <!-- ══════════════════════════════════════════
+                             SECTION 4 – ORDER LINES TABLE
+                             Columns: N° | Description | Model
+                                    | Quantity | Unit price | Currency
+                                    | Total price (USD)
+                        ══════════════════════════════════════════ -->
+                        <table width="100%"
+                               style="border-collapse: collapse;
+                                      font-size: 10px;
+                                      margin-bottom: 0;">
+                            <thead>
+                                <tr style="background-color: #d9d9d9;">
+                                    <th style="border:1px solid #000;
+                                               padding:4px 3px;
+                                               text-align:center;
+                                               font-weight:bold;
+                                               width:5%;">N&#176;</th>
+                                    <th style="border:1px solid #000;
+                                               padding:4px 3px;
+                                               text-align:center;
+                                               font-weight:bold;
+                                               width:22%;">Description</th>
+                                    <th style="border:1px solid #000;
+                                               padding:4px 3px;
+                                               text-align:center;
+                                               font-weight:bold;
+                                               width:20%;">Model</th>
+                                    <th style="border:1px solid #000;
+                                               padding:4px 3px;
+                                               text-align:center;
+                                               font-weight:bold;
+                                               width:10%;">Quantity</th>
+                                    <th style="border:1px solid #000;
+                                               padding:4px 3px;
+                                               text-align:center;
+                                               font-weight:bold;
+                                               width:14%;">Unit price</th>
+                                    <th style="border:1px solid #000;
+                                               padding:4px 3px;
+                                               text-align:center;
+                                               font-weight:bold;
+                                               width:10%;">Currency</th>
+                                    <th style="border:1px solid #000;
+                                               padding:4px 3px;
+                                               text-align:center;
+                                               font-weight:bold;
+                                               width:19%;">Total price<br/>
+                                               (<t t-esc="doc.currency_id.name or 'USD'"/>)</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <t t-foreach="doc.order_line" t-as="line">
+                                    <tr>
+                                        <!-- N° -->
+                                        <td style="border:1px solid #000;
+                                                   padding:4px 3px;
+                                                   text-align:center;
+                                                   vertical-align:middle;">
+                                            <t t-esc="line_index + 1"/>
+                                        </td>
+
+                                        <!-- Description (product name) -->
+                                        <td style="border:1px solid #000;
+                                                   padding:4px 5px;
+                                                   text-align:left;
+                                                   vertical-align:middle;">
+                                            <t t-esc="line.product_id.name or '-'"/>
+                                        </td>
+
+                                        <!-- Model (internal reference) -->
+                                        <td style="border:1px solid #000;
+                                                   padding:4px 5px;
+                                                   text-align:center;
+                                                   vertical-align:middle;">
+                                            <t t-esc="line.product_id.default_code or '-'"/>
+                                        </td>
+
+                                        <!-- Quantity -->
+                                        <td style="border:1px solid #000;
+                                                   padding:4px 3px;
+                                                   text-align:center;
+                                                   vertical-align:middle;
+                                                   font-weight:bold;">
+                                            <span t-field="line.product_qty"
+                                                  t-options='{"widget":"integer"}'/>
+                                        </td>
+
+                                        <!-- Unit price -->
+                                        <td style="border:1px solid #000;
+                                                   padding:4px 3px;
+                                                   text-align:center;
+                                                   vertical-align:middle;
+                                                   font-weight:bold;">
+                                            <span t-field="line.price_unit"
+                                                  t-options='{"widget":"monetary",
+                                                              "display_currency":doc.currency_id}'/>
+                                        </td>
+
+                                        <!-- Currency symbol/name -->
+                                        <td style="border:1px solid #000;
+                                                   padding:4px 3px;
+                                                   text-align:center;
+                                                   vertical-align:middle;
+                                                   font-weight:bold;">
+                                            <t t-esc="doc.currency_id.name or '-'"/>
+                                            &#160;<t t-esc="doc.currency_id.symbol or ''"/>
+                                        </td>
+
+                                        <!-- Total price -->
+                                        <td style="border:1px solid #000;
+                                                   padding:4px 3px;
+                                                   text-align:center;
+                                                   vertical-align:middle;
+                                                   font-weight:bold;">
+                                            <span t-field="line.price_subtotal"
+                                                  t-options='{"widget":"monetary",
+                                                              "display_currency":doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+
+                            <tfoot>
+                            </tfoot>
+                        </table>
+
+                        <!-- ══════════════════════════════════════════
+                             SECTION 5 – SUMMARY FOOTER BLOCK
+                             Left  : Conditions règlement / Mode de
+                                     transport / Délai / NB
+                             Right : Total H.T. / Remises / Net H.T.
+                                     / Total T.T.C.
+                        ══════════════════════════════════════════ -->
+                        <table width="100%"
+                               style="border-collapse: collapse;
+                                      margin-top: 8px;
+                                      border: 1px solid #000;">
+                            <tr>
+                                <!-- ── Left : conditions block ── -->
+                                <td style="vertical-align: top;
+                                           width: 60%;
+                                           border-right: 1px solid #000;
+                                           padding: 5px 8px;">
+
+                                    <!--
+                                        Conditions règlement →
+                                        doc.payment_term_id.name (standard)
+                                    -->
+                                    <p style="margin: 2px 0; font-size: 10px;">
+                                        <strong>Conditions r&#232;glement&#160;:</strong>
+                                        <t t-if="doc.payment_term_id">
+                                            <t t-esc="doc.payment_term_id.name"/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </p>
+
+                                    <!--
+                                        Mode de transport →
+                                        No standard field on purchase.order.
+                                        Store the incoterm / transport mode in
+                                        doc.notes (PO Notes field) or add a
+                                        custom Char field x_transport_mode.
+                                        Shown from notes here; replace with
+                                        doc.x_transport_mode when field exists.
+                                    -->
+                                    <p style="margin: 2px 0; font-size: 10px;">
+                                        <strong>Mode de transport&#160;:</strong>
+                                        -
+                                    </p>
+
+                                    <!--
+                                        Délai →
+                                        doc.date_approve (Approval date on PO)
+                                        is standard. For expected delivery,
+                                        use the first line's date_planned.
+                                        Shown as free text; replace with a
+                                        real field when available.
+                                    -->
+                                    <p style="margin: 2px 0; font-size: 10px;">
+                                        <strong>D&#233;lais&#160;:</strong>
+                                        <t t-if="doc.order_line and doc.order_line[0].date_planned">
+                                            <span t-field="doc.order_line[0].date_planned"
+                                                  t-options='{"widget":"date"}'/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </p>
+
+                                    <!--
+                                        NB: shown from doc.notes (standard Text
+                                        field on purchase.order)
+                                    -->
+                                    <t t-if="doc.notes">
+                                        <p style="margin: 4px 0 2px 0;
+                                                  font-size: 10px;">
+                                            <strong>NB&#160;:</strong>
+                                            <t t-esc="doc.notes"/>
+                                        </p>
+                                    </t>
+                                    <t t-else="">
+                                        <p style="margin: 4px 0 2px 0;
+                                                  font-size: 10px;">
+                                            <strong>NB&#160;:</strong>
+                                            Tous les frais bancaires en dehors de la Tunisie
+                                            sont &#224; la charge du b&#233;n&#233;ficiaire
+                                            (R&#233;glementation de change)
+                                        </p>
+                                    </t>
+                                </td>
+
+                                <!-- ── Right : totals block ── -->
+                                <td style="vertical-align: top;
+                                           width: 40%;
+                                           padding: 0;">
+
+                                    <table width="100%"
+                                           style="border-collapse: collapse;">
+                                        <!-- Total H.T. -->
+                                        <tr style="border-bottom: 1px solid #000;">
+                                            <td style="padding: 4px 8px;
+                                                       font-weight: bold;
+                                                       border-right: 1px solid #000;">
+                                                Total H.T.&#160;:
+                                            </td>
+                                            <td style="padding: 4px 8px;
+                                                       text-align: right;
+                                                       font-weight: bold;">
+                                                <span t-field="doc.amount_untaxed"
+                                                      t-options='{"widget":"monetary",
+                                                                  "display_currency":doc.currency_id}'/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Total des Remises (discount = 0 unless computed) -->
+                                        <tr style="border-bottom: 1px solid #000;">
+                                            <td style="padding: 4px 8px;
+                                                       border-right: 1px solid #000;">
+                                                Total des Remises&#160;:
+                                            </td>
+                                            <td style="padding: 4px 8px;
+                                                       text-align: right;">
+                                                <!--
+                                                    Standard Odoo has no "discount total"
+                                                    field on purchase.order.
+                                                    Displayed as 0.00 by default.
+                                                    To compute: extend the model.
+                                                -->
+                                                0.00&#160;<t t-esc="doc.currency_id.symbol or ''"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Net H.T. (= amount_untaxed after discount) -->
+                                        <tr style="border-bottom: 1px solid #000;">
+                                            <td style="padding: 4px 8px;
+                                                       font-weight: bold;
+                                                       border-right: 1px solid #000;">
+                                                Net H.T.&#160;:
+                                            </td>
+                                            <td style="padding: 4px 8px;
+                                                       text-align: right;
+                                                       font-weight: bold;">
+                                                <span t-field="doc.amount_untaxed"
+                                                      t-options='{"widget":"monetary",
+                                                                  "display_currency":doc.currency_id}'/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Total T.T.C. -->
+                                        <tr>
+                                            <td style="padding: 4px 8px;
+                                                       font-weight: bold;
+                                                       border-right: 1px solid #000;">
+                                                Total T.T.C.&#160;:
+                                            </td>
+                                            <td style="padding: 4px 8px;
+                                                       text-align: right;
+                                                       font-weight: bold;">
+                                                <span t-field="doc.amount_total"
+                                                      t-options='{"widget":"monetary",
+                                                                  "display_currency":doc.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ══════════════════════════════════════════
+                             SECTION 6 – COMMENTAIRES
+                        ══════════════════════════════════════════ -->
+                        <table width="100%"
+                               style="border-collapse: collapse;
+                                      border: 1px solid #000;
+                                      border-top: none;
+                                      margin-bottom: 6px;">
+                            <tr>
+                                <td style="padding: 4px 8px;
+                                           font-weight: bold;
+                                           font-size: 10px;">
+                                    Commentaires&#160;:
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ══════════════════════════════════════════
+                             SECTION 7 – SIGNATURE BLOCK
+                             3 columns: Edité par | Revu par | Validé par
+                        ══════════════════════════════════════════ -->
+                        <table width="100%"
+                               style="border-collapse: collapse;
+                                      border: 1px solid #000;
+                                      margin-bottom: 8px;">
+                            <tr style="background-color: #f0f0f0;">
+                                <!-- Edité par -->
+                                <td style="border-right: 1px solid #000;
+                                           padding: 4px 6px;
+                                           text-align: center;
+                                           font-weight: bold;
+                                           width: 33%;
+                                           text-decoration: underline;">
+                                    Edit&#233; par
+                                </td>
+                                <!-- Revu par -->
+                                <td style="border-right: 1px solid #000;
+                                           padding: 4px 6px;
+                                           text-align: center;
+                                           font-weight: bold;
+                                           width: 34%;
+                                           text-decoration: underline;">
+                                    Revu par
+                                </td>
+                                <!-- Validé par -->
+                                <td style="padding: 4px 6px;
+                                           text-align: center;
+                                           font-weight: bold;
+                                           width: 33%;
+                                           text-decoration: underline;">
+                                    Valid&#233; par
+                                </td>
+                            </tr>
+
+                            <!-- Signature row -->
+                            <tr style="height: 50px;">
+                                <td style="border-right: 1px solid #000;
+                                           padding: 6px;
+                                           vertical-align: bottom;
+                                           font-size: 10px;">
+                                    &#160;
+                                </td>
+                                <td style="border-right: 1px solid #000;
+                                           padding: 6px;
+                                           vertical-align: bottom;
+                                           font-size: 10px;">
+                                    &#160;
+                                </td>
+                                <td style="padding: 6px;
+                                           vertical-align: bottom;
+                                           font-size: 10px;">
+                                    &#160;
+                                </td>
+                            </tr>
+
+                            <!-- Visa / Date row -->
+                            <tr style="border-top: 1px solid #000;">
+                                <td style="border-right: 1px solid #000;
+                                           padding: 4px 6px;
+                                           font-size: 10px;">
+                                    <strong>Visa</strong>
+                                    <span style="margin-left:80px;"></span>
+                                    <strong>Date&#160;:</strong>
+                                </td>
+                                <td style="border-right: 1px solid #000;
+                                           padding: 4px 6px;
+                                           font-size: 10px;">
+                                    <strong>Visa</strong>
+                                    <span style="margin-left:80px;"></span>
+                                    <strong>Date&#160;:</strong>
+                                </td>
+                                <td style="padding: 4px 6px;
+                                           font-size: 10px;">
+                                    <strong>Visa</strong>
+                                    <span style="margin-left:80px;"></span>
+                                    <strong>Date&#160;:</strong>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ══════════════════════════════════════════
+                             SECTION 8 – LEGAL CONDITIONS TEXT
+                        ══════════════════════════════════════════ -->
+                        <p style="margin: 4px 0 2px 0;
+                                  font-size: 9px; font-weight: bold;">
+                            Nous prions nos fournisseurs de bien vouloir&#160;:
+                        </p>
+
+                        <p style="margin: 2px 0; font-size: 9px;
+                                  font-weight: bold;">
+                            I) Fournisseurs Local et Etranger&#160;:
+                        </p>
+
+                        <p style="margin: 1px 0 1px 16px; font-size: 9px;">
+                            1) Rappeler sur la facture les num&#233;ros et dates des bons de livraisons.
+                        </p>
+                        <p style="margin: 1px 0 1px 16px; font-size: 9px;">
+                            2) Nous adresser d&#232;s la r&#233;ception de ce document une
+                            confirmation de notre commande.
+                        </p>
+
+                        <p style="margin: 3px 0 1px 0; font-size: 9px;
+                                  font-weight: bold;">
+                            II) Fournisseur Etranger&#160;:
+                        </p>
+
+                        <p style="margin: 1px 0 1px 16px; font-size: 9px;">
+                            3) Nous envoyer une facture proforma en 4 exemplaires et une facture
+                            d&#233;finitive en 4 exemplaires.
+                        </p>
+                        <p style="margin: 1px 0 1px 16px; font-size: 9px;">
+                            4) Nous mentionner sur la facture proforma et d&#233;finitive l&#8217;origine
+                            et la provenance de la marchandise, le mode de livraison, le mode de
+                            payement, le cachet et signature, la clause &#171;&#160;nous certifions que
+                            la marchandise est conforme aux normes internationales et aux exigences
+                            du client&#160;&#187;.
+                        </p>
+                        <p style="margin: 1px 0 1px 16px; font-size: 9px;">
+                            5) Nous envoyer le certificat d&#8217;origine vis&#233; par la chambre de
+                            commerce, Le Connaissement ou LTA, l&#8217;EUR1(C.E.E), le Certificat de
+                            conformit&#233; (Produit Fini) et Catalogues (Bien d&#8217;&#233;quipement).
+                        </p>
+                        <p style="margin: 1px 0 1px 16px; font-size: 9px;">
+                            6) La soci&#233;t&#233; Xinxu company prend en consid&#233;ration dans ces
+                            relations avec les fournisseurs le respect de ce dernier de la
+                            r&#233;glementation de la protection de l&#8217;environnement.
+                        </p>
+
+                    </div><!-- /page -->
+                </t><!-- /web.external_layout -->
+            </t><!-- /t-foreach docs -->
+        </t><!-- /web.html_container -->
+    </template>
+
+</odoo>

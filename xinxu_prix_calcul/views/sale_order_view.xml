@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sale_order_form_xinxu_calcul" model="ir.ui.view">
+        <field name="name">sale.order.form.xinxu.calcul</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Type de calcul avant le client -->
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="xinxu_calc_type"
+                       widget="radio"
+                       options="{'horizontal': true}"/>
+            </xpath>
+
+            <!-- Bouton smart BC fournisseurs -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_xinxu_purchases"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-shopping-cart"
+                        invisible="xinxu_purchase_count == 0">
+                    <field name="xinxu_purchase_count"
+                           widget="statinfo"
+                           string="BC Fournisseur(s)"/>
+                </button>
+            </xpath>
+
+            <!-- Champ technique pour le bouton -->
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="xinxu_purchase_ids" invisible="1"/>
+                <field name="xinxu_purchase_count" invisible="1"/>
+            </xpath>
+
+            <!-- Bouton Créer le BC Fournisseur -->
+            <xpath expr="//button[@name='action_confirm']" position="after">
+                <button name="action_xinxu_create_purchase_order"
+                        string="Créer le BC Fournisseur"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state not in ('sale', 'done')"/>
+            </xpath>
+
+            <!-- Onglet Tableau de Calcul après les lignes -->
+            <xpath expr="//page[@name='order_lines']" position="after">
+                <page string="Tableau de Calcul" name="xinxu_calcul">
+
+                    <!-- TABLEAU LOCAL (TND) -->
+                    <group invisible="xinxu_calc_type != 'local'">
+                        <field name="order_line"
+                               widget="one2many"
+                               nolabel="1"
+                               string="Tableau de Calcul — Client Local (TND)">
+                            <list editable="bottom">
+                                <!-- Identification -->
+                                <field name="product_id" optional="show"/>
+                                <field name="x_supplier_id"
+                                       string="Fournisseur retenu"
+                                       optional="show"/>
+                                <field name="x_delivery_time"
+                                       string="Délai"
+                                       optional="show"/>
+
+                                <!-- Saisie manuelle -->
+                                <field name="x_supplier_price"
+                                       string="Prix fournisseur"
+                                       optional="show"/>
+                                <field name="x_customs_duties_pct"
+                                       string="Droits douane %"
+                                       optional="show"
+                                       widget="percentage"/>
+                                <field name="x_conversion_rate"
+                                       string="Taux conv. TND"
+                                       optional="show"/>
+                                <field name="x_fodec_pct"
+                                       string="FODEC %"
+                                       optional="show"
+                                       widget="percentage"/>
+                                <field name="x_impot_douane_pct"
+                                       string="Impôt douane %"
+                                       optional="show"
+                                       widget="percentage"/>
+                                <field name="x_avance_import_pct"
+                                       string="Avance Import %"
+                                       optional="show"
+                                       widget="percentage"/>
+                                <field name="x_margin_pct"
+                                       string="Marge %"
+                                       optional="show"
+                                       widget="percentage"/>
+                                <field name="x_tva_pct"
+                                       string="TVA %"
+                                       optional="show"
+                                       widget="percentage"/>
+                                <field name="product_uom_qty"
+                                       string="Quantité"
+                                       optional="show"/>
+
+                                <!-- Calculés automatiquement -->
+                                <field name="x_total_price_orig"
+                                       string="Prix total devise"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_price_tnd"
+                                       string="Prix en TND"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_price_fodec"
+                                       string="Prix + FODEC"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_price_all_taxes"
+                                       string="Avec impôt douane"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_total_cost_tnd"
+                                       string="Coût total TND"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_prix_htva"
+                                       string="Prix HTVA"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_marge_unitaire"
+                                       string="Marge unitaire"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_montant_tva"
+                                       string="Montant TVA"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_prix_ttc"
+                                       string="Prix de vente TTC ✓"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_prix_total_ttc"
+                                       string="Prix total TTC"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_marge_total_local"
+                                       string="Marge totale"
+                                       readonly="1"
+                                       optional="show"/>
+                            </list>
+                        </field>
+                    </group>
+
+                    <!-- TABLEAU ÉTRANGER (EUR) -->
+                    <group invisible="xinxu_calc_type != 'foreign'">
+                        <field name="order_line"
+                               widget="one2many"
+                               nolabel="1"
+                               string="Tableau de Calcul — Client Étranger (EUR)">
+                            <list editable="bottom">
+                                <!-- Identification -->
+                                <field name="product_id" optional="show"/>
+                                <field name="x_supplier_id"
+                                       string="Fournisseur retenu"
+                                       optional="show"/>
+                                <field name="x_delivery_time"
+                                       string="Délai"
+                                       optional="show"/>
+
+                                <!-- Saisie manuelle -->
+                                <field name="price_unit"
+                                       string="Prix fournisseur"
+                                       optional="show"/>
+                                <field name="x_conversion_rate"
+                                       string="Taux conv. EUR"
+                                       optional="show"/>
+                                <field name="x_margin_pct"
+                                       string="Marge %"
+                                       optional="show"
+                                       widget="percentage"/>
+                                <field name="product_uom_qty"
+                                       string="Quantité"
+                                       optional="show"/>
+
+                                <!-- Calculés automatiquement -->
+                                <field name="x_price_eur"
+                                       string="Prix en EUR (coût)"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_unit_sell_price_eur"
+                                       string="Prix de vente unitaire ✓"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_prix_total_eur"
+                                       string="Prix total EUR"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_margin_value_eur"
+                                       string="Marge unitaire"
+                                       readonly="1"
+                                       optional="show"/>
+                                <field name="x_marge_total_eur"
+                                       string="Marge totale"
+                                       readonly="1"
+                                       optional="show"/>
+                            </list>
+                        </field>
+                    </group>
+
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
