@@ -1,26 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- ============================================================
-         PAPER FORMAT
-    ============================================================ -->
     <record id="paperformat_xinxu_invoice" model="report.paperformat">
         <field name="name">Xinxu A4 Invoice</field>
-        <field name="default"       eval="False"/>
+        <field name="default" eval="False"/>
         <field name="format">A4</field>
         <field name="orientation">Portrait</field>
         <field name="margin_top">10</field>
         <field name="margin_bottom">10</field>
         <field name="margin_left">10</field>
         <field name="margin_right">10</field>
-        <field name="header_line"   eval="False"/>
+        <field name="header_line" eval="False"/>
         <field name="header_spacing">0</field>
         <field name="dpi">90</field>
     </record>
 
-    <!-- ============================================================
-         REPORT ACTION
-    ============================================================ -->
     <record id="action_report_xinxu_proforma_local" model="ir.actions.report">
         <field name="name">Proforma Invoice (client local)</field>
         <field name="model">sale.order</field>
@@ -37,33 +31,24 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
                 <t t-call="web.external_layout">
-
                     <div class="page"
                          style="font-family: Arial, sans-serif; font-size: 11px; color: #000;">
-
-                        <!-- Pre-compute company bank once for the whole document -->
                         <t t-set="cbank" t-value="doc.company_id.partner_id.bank_ids[:1]"/>
 
-                        <!-- ══════════════════════════════════════════
-                             SECTION 1 – COMPANY HEADER
-                        ══════════════════════════════════════════ -->
+                        <!-- SECTION 1 – COMPANY HEADER -->
                         <table width="100%"
                                style="border-bottom: 2px solid #000;
                                       margin-bottom: 6px;
                                       border-collapse: collapse;">
-                            <tr>
-                                <!-- Left : company details -->
+                             <tr>
                                 <td style="vertical-align: top; width: 65%;
                                            padding: 0 8px 6px 0;">
-
                                     <h1 style="font-size: 26px; font-weight: 900;
                                                letter-spacing: 2px;
                                                text-transform: uppercase;
                                                margin: 0 0 6px 0; color: #000;">
                                         <t t-esc="doc.company_id.name"/>
                                     </h1>
-
-                                    <!-- Address: inline parts, no list-building -->
                                     <p style="margin: 2px 0; font-weight: bold;">
                                         Address&#160;:&#160;<t t-esc="doc.company_id.street or ''"/>
                                         <t t-if="doc.company_id.zip">
@@ -76,18 +61,14 @@
                                             &#160;&#8211;&#160;<t t-esc="doc.company_id.country_id.name"/>
                                         </t>
                                     </p>
-
                                     <p style="margin: 2px 0; font-weight: bold;">
                                         RC&#160;:&#160;
                                         <t t-esc="doc.company_id.company_registry or '-'"/>
                                     </p>
-
                                     <p style="margin: 2px 0; font-weight: bold;">
                                         MF&#160;:&#160;
                                         <t t-esc="doc.company_id.vat or '-'"/>
                                     </p>
-
-                                    <!-- IBAN / RIB from res.partner.bank_ids (standard) -->
                                     <p style="margin: 2px 0; font-weight: bold;">
                                         IBAN&#160;:&#160;
                                         <t t-if="cbank">
@@ -95,7 +76,6 @@
                                         </t>
                                         <t t-else="">-</t>
                                     </p>
-
                                     <p style="margin: 2px 0; font-weight: bold;">
                                         CODE SWIFT (Bic)&#160;:&#160;
                                         <t t-if="cbank and cbank[0].bank_id and cbank[0].bank_id.bic">
@@ -103,7 +83,6 @@
                                         </t>
                                         <t t-else="">-</t>
                                     </p>
-
                                     <p style="margin: 2px 0; font-weight: bold;">
                                         RIB&#160;:&#160;
                                         <t t-if="cbank">
@@ -111,7 +90,6 @@
                                         </t>
                                         <t t-else="">-</t>
                                     </p>
-
                                     <p style="margin: 2px 0; font-weight: bold;">
                                         Banque&#160;:&#160;
                                         <t t-if="cbank and cbank[0].bank_id and cbank[0].bank_id.name">
@@ -119,7 +97,6 @@
                                         </t>
                                         <t t-else="">-</t>
                                     </p>
-
                                     <p style="margin: 8px 0 4px 0;">
                                         <span style="font-weight: bold;">Tel&#160;:</span>
                                         &#160;<t t-esc="doc.company_id.phone or '-'"/>
@@ -128,8 +105,6 @@
                                         &#160;<t t-esc="doc.company_id.email or '-'"/>
                                     </p>
                                 </td>
-
-                                <!-- Right : logo -->
                                 <td style="vertical-align: top; text-align: right;
                                            width: 35%; padding: 0 0 6px 0;">
                                     <t t-if="doc.company_id.logo">
@@ -139,15 +114,13 @@
                                              alt="Logo"/>
                                     </t>
                                 </td>
-                            </tr>
-                        </table>
+                             </tr>
+                         </table>
 
-                        <!-- ══════════════════════════════════════════
-                             SECTION 2 – INVOICE TITLE BAR
-                        ══════════════════════════════════════════ -->
+                        <!-- SECTION 2 – INVOICE TITLE BAR -->
                         <table width="100%"
                                style="margin-bottom: 6px; border-collapse: collapse;">
-                            <tr>
+                             <tr>
                                 <td style="text-align: center; width: 70%;
                                            vertical-align: middle;">
                                     <span style="font-weight: 900; font-size: 14px;
@@ -165,27 +138,21 @@
                                               t-options='{"widget": "date"}'/>
                                     </span>
                                 </td>
-                            </tr>
-                        </table>
+                             </tr>
+                         </table>
 
-                        <!-- ══════════════════════════════════════════
-                             SECTION 3 – CLIENT BLOCK
-                        ══════════════════════════════════════════ -->
+                        <!-- SECTION 3 – CLIENT BLOCK -->
                         <table width="100%"
                                style="border: 1px solid #000;
                                       margin-bottom: 10px;
                                       border-collapse: collapse;">
-                            <tr>
-                                <!-- Left : client details -->
+                             <tr>
                                 <td style="vertical-align: top; width: 65%;
                                            padding: 4px 8px;">
-
                                     <p style="margin: 2px 0; font-weight: bold;">
                                         Client&#160;:&#160;
                                         <t t-esc="doc.partner_id.name or '-'"/>
                                     </p>
-
-                                    <!-- Address -->
                                     <p style="margin: 2px 0; font-weight: bold;">
                                         Adresse&#160;:&#160;
                                         <t t-if="doc.partner_id.street">
@@ -196,24 +163,19 @@
                                         <t t-if="doc.partner_id.zip"> <t t-esc="doc.partner_id.zip"/></t>
                                         <t t-if="doc.partner_id.country_id">, <t t-esc="doc.partner_id.country_id.name"/></t>
                                     </p>
-
                                     <p style="margin: 2px 0; font-weight: bold;">
                                         MF&#160;:&#160;
                                         <t t-esc="doc.partner_id.vat or '-'"/>
                                     </p>
-
                                     <p style="margin: 2px 0; font-weight: bold;">
                                         Email&#160;:&#160;
                                         <t t-esc="doc.partner_id.email or '-'"/>
                                     </p>
-
                                     <p style="margin: 2px 0; font-weight: bold;">
                                         T&#201;L&#201;PHONE&#160;:&#160;
                                         <t t-esc="doc.partner_id.phone or '-'"/>
                                     </p>
                                 </td>
-
-                                <!-- Right : code client -->
                                 <td style="vertical-align: top; width: 35%;
                                            padding: 4px 8px;">
                                     <p style="margin: 2px 0; font-weight: bold;">
@@ -221,163 +183,156 @@
                                         <t t-esc="doc.partner_id.ref or '-'"/>
                                     </p>
                                 </td>
-                            </tr>
-                        </table>
+                             </tr>
+                         </table>
 
-                        <!-- ══════════════════════════════════════════
-                             SECTION 4 – ORDER LINES TABLE
-                        ══════════════════════════════════════════ -->
-                        <table width="100%"
-                               style="border-collapse: collapse; font-size: 11px;">
+                        <!-- SECTION 4 – ORDER LINES TABLE -->
+                        <table width="100%" style="border-collapse: collapse; font-size: 11px; margin-bottom: 0;">
                             <thead>
                                 <tr style="background-color: #d9d9d9;">
-                                    <th style="border:1px solid #000; padding:5px 4px;
-                                               text-align:center; font-weight:bold;
-                                               width:4%;">N&#176;</th>
-                                    <th style="border:1px solid #000; padding:5px 4px;
-                                               text-align:center; font-weight:bold;
-                                               width:18%;">Article</th>
-                                    <th style="border:1px solid #000; padding:5px 4px;
-                                               text-align:center; font-weight:bold;
-                                               width:14%;">Model</th>
-                                    <th style="border:1px solid #000; padding:5px 4px;
-                                               text-align:center; font-weight:bold;
-                                               width:11%;">Photo</th>
-                                    <th style="border:1px solid #000; padding:5px 4px;
-                                               text-align:center; font-weight:bold;
-                                               width:5%;">Unit</th>
-                                    <th style="border:1px solid #000; padding:5px 4px;
-                                               text-align:center; font-weight:bold;
-                                               width:12%;">Prix Unitaire<br/>HTVA</th>
-                                    <th style="border:1px solid #000; padding:5px 4px;
-                                               text-align:center; font-weight:bold;
-                                               width:7%;">Tva (%)</th>
-                                    <th style="border:1px solid #000; padding:5px 4px;
-                                               text-align:center; font-weight:bold;
-                                               width:12%;">Prix Unitaire<br/>TTC</th>
-                                    <th style="border:1px solid #000; padding:5px 4px;
-                                               text-align:center; font-weight:bold;
-                                               width:5%;">Qty</th>
-                                    <th style="border:1px solid #000; padding:5px 4px;
-                                               text-align:center; font-weight:bold;
-                                               width:12%;">Prix Total TTC</th>
+                                    <th style="border:1px solid #000; padding:5px 4px; text-align:center;
+                                            font-weight:bold; width:4%;">N&#176;</th>
+                                    <th style="border:1px solid #000; padding:5px 4px; text-align:center;
+                                            font-weight:bold; width:18%;">Article</th>
+                                    <th style="border:1px solid #000; padding:5px 4px; text-align:center;
+                                            font-weight:bold; width:14%;">Model</th>
+                                    <th style="border:1px solid #000; padding:5px 4px; text-align:center;
+                                            font-weight:bold; width:11%;">Photo</th>
+                                    <th style="border:1px solid #000; padding:5px 4px; text-align:center;
+                                            font-weight:bold; width:5%;">Unit</th>
+                                    <th style="border:1px solid #000; padding:5px 4px; text-align:center;
+                                            font-weight:bold; width:12%;">Prix Unitaire<br/>HTVA</th>
+                                    <th style="border:1px solid #000; padding:5px 4px; text-align:center;
+                                            font-weight:bold; width:7%;">Tva (%)</th>
+                                    <th style="border:1px solid #000; padding:5px 4px; text-align:center;
+                                            font-weight:bold; width:12%;">Prix Unitaire<br/>TTC (<t t-esc="doc.currency_id.name"/>)</th>
+                                    <th style="border:1px solid #000; padding:5px 4px; text-align:center;
+                                            font-weight:bold; width:5%;">Qty</th>
+                                    <th style="border:1px solid #000; padding:5px 4px; text-align:center;
+                                            font-weight:bold; width:12%;">Prix Total TTC (<t t-esc="doc.currency_id.name"/>)</th>
                                 </tr>
                             </thead>
-
-                            <tbody>
-                                <t t-foreach="doc.order_line" t-as="line">
-                                    <!--
-                                        Pure arithmetic — always safe in safe_eval.
-                                        price_subtotal is HTVA (excl. tax) in Odoo.
-                                    -->
-                                    <t t-set="tax_rate"
-                                       t-value="(line.tax_id[0].amount / 100.0) if line.tax_id else 0.0"/>
-                                    <t t-set="unit_ttc"
-                                       t-value="line.price_unit * (1.0 + tax_rate)"/>
-                                    <t t-set="total_ttc"
-                                       t-value="line.price_subtotal * (1.0 + tax_rate)"/>
-
-                                    <tr>
-                                        <td style="border:1px solid #000; padding:5px 4px;
-                                                   text-align:center; vertical-align:middle;">
-                                            <t t-esc="line_index + 1"/>
-                                        </td>
-                                        <td style="border:1px solid #000; padding:5px 4px;
-                                                   text-align:center; vertical-align:middle;">
-                                            <t t-esc="line.product_id.name or '-'"/>
-                                        </td>
-                                        <td style="border:1px solid #000; padding:5px 4px;
-                                                   text-align:center; vertical-align:middle;">
-                                            <t t-esc="line.product_id.default_code or '-'"/>
-                                        </td>
-                                        <td style="border:1px solid #000; padding:5px 4px;
-                                                   text-align:center; vertical-align:middle;">
-                                            <t t-if="line.product_id.image_128">
-                                                <img t-att-src="'/web/image/product.product/%s/image_128'
-                                                                % line.product_id.id"
-                                                     style="max-height:60px; max-width:80px;"
-                                                     alt=""/>
-                                            </t>
-                                        </td>
-                                        <td style="border:1px solid #000; padding:5px 4px;
-                                                   text-align:center; vertical-align:middle;">
-                                            <t t-if="line.product_uom">
-                                                <t t-esc="line.product_uom.name"/>
-                                            </t>
-                                            <t t-else="">pc</t>
-                                        </td>
-                                        <td style="border:1px solid #000; padding:5px 4px;
-                                                   text-align:center; vertical-align:middle;">
-                                            <span t-field="line.price_unit"
-                                                  t-options='{"widget":"monetary",
-                                                              "display_currency":doc.currency_id}'/>
-                                        </td>
-                                        <td style="border:1px solid #000; padding:5px 4px;
-                                                   text-align:center; vertical-align:middle;">
-                                            <t t-if="line.tax_id">
-                                                <t t-foreach="line.tax_id" t-as="tax">
-                                                    <t t-esc="int(tax.amount)"/>%<t t-if="not tax_last">,&#160;</t>
-                                                </t>
-                                            </t>
-                                            <t t-else="">-</t>
-                                        </td>
-                                        <td style="border:1px solid #000; padding:5px 4px;
-                                                   text-align:center; vertical-align:middle;">
-                                            <t t-esc="'%.3f' % unit_ttc"/>&#160;DT
-                                        </td>
-                                        <td style="border:1px solid #000; padding:5px 4px;
-                                                   text-align:center; vertical-align:middle;">
-                                            <span t-field="line.product_uom_qty"
-                                                  t-options='{"widget":"integer"}'/>
-                                        </td>
-                                        <td style="border:1px solid #000; padding:5px 4px;
-                                                   text-align:center; vertical-align:middle;">
-                                            <t t-esc="'%.3f' % total_ttc"/>&#160;DT
-                                        </td>
-                                    </tr>
-                                </t>
-                            </tbody>
-
-                            <tfoot>
-
-                                <!-- Grand total (amount_total = standard sale.order field) -->
-                                <tr>
-                                    <td colspan="9"
-                                        style="border:1px solid #000; padding:5px 6px;
-                                               text-align:right; font-weight:bold;">
-                                        Prix Total TTC (TND)
-                                    </td>
-                                    <td style="border:1px solid #000; padding:5px 6px;
-                                               text-align:center; font-weight:bold;">
-                                        <span t-field="doc.amount_total"
-                                              t-options='{"widget":"monetary",
-                                                          "display_currency":doc.currency_id}'/>
-                                    </td>
-                                </tr>
-                            </tfoot>
                         </table>
 
-                        <!-- ══════════════════════════════════════════
-                             SECTION 5 – FOOTER TERMS
-                        ══════════════════════════════════════════ -->
+                        <t t-foreach="doc.order_line" t-as="line">
+                            <t t-set="tax_rate"
+                            t-value="(line.tax_id[0].amount / 100.0) if line.tax_id else 0.0"/>
+                            <t t-set="unit_ttc"
+                            t-value="line.price_unit * (1.0 + tax_rate)"/>
+                            <t t-set="total_ttc"
+                            t-value="line.price_subtotal * (1.0 + tax_rate)"/>
+
+                            <div style="page-break-inside: avoid; margin-top: -1px;">
+                                <table width="100%" style="border-collapse: collapse;
+                                                            font-size: 11px;
+                                                            margin-bottom: 0;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="border:1px solid #000; padding:5px 4px;
+                                                    text-align:center; vertical-align:middle;
+                                                    width:4%;">
+                                                <t t-esc="line_index + 1"/>
+                                            </td>
+                                            <td style="border:1px solid #000; padding:5px 4px;
+                                                    text-align:center; vertical-align:middle;
+                                                    width:18%;">
+                                                <t t-esc="line.product_id.name or '-'"/>
+                                            </td>
+                                            <td style="border:1px solid #000; padding:5px 4px;
+                                                    text-align:center; vertical-align:middle;
+                                                    width:14%;">
+                                                <t t-esc="line.product_id.default_code or '-'"/>
+                                            </td>
+                                            <td style="border:1px solid #000; padding:5px 4px;
+                                                    text-align:center; vertical-align:middle;
+                                                    width:11%;">
+                                                <t t-if="line.product_id.image_128">
+                                                    <img t-att-src="'/web/image/product.product/%s/image_128'
+                                                                    % line.product_id.id"
+                                                        style="max-height:60px; max-width:80px;"
+                                                        alt=""/>
+                                                </t>
+                                            </td>
+                                            <td style="border:1px solid #000; padding:5px 4px;
+                                                    text-align:center; vertical-align:middle;
+                                                    width:5%;">
+                                                <t t-if="line.product_uom">
+                                                    <t t-esc="line.product_uom.name"/>
+                                                </t>
+                                                <t t-else="">pc</t>
+                                            </td>
+                                            <td style="border:1px solid #000; padding:5px 4px;
+                                                    text-align:center; vertical-align:middle;
+                                                    width:12%;">
+                                                <span t-field="line.price_unit"
+                                                    t-options='{"widget":"monetary",
+                                                                "display_currency":doc.currency_id}'/>
+                                            </td>
+                                            <td style="border:1px solid #000; padding:5px 4px;
+                                                    text-align:center; vertical-align:middle;
+                                                    width:7%;">
+                                                <t t-if="line.tax_id">
+                                                    <t t-foreach="line.tax_id" t-as="tax">
+                                                        <t t-esc="int(tax.amount)"/>%<t t-if="not tax_last">,&#160;</t>
+                                                    </t>
+                                                </t>
+                                                <t t-else="">-</t>
+                                            </td>
+                                            <td style="border:1px solid #000; padding:5px 4px;
+                                                    text-align:center; vertical-align:middle;
+                                                    width:12%;">
+                                                <t t-esc="'%.3f' % unit_ttc"/>&#160;<span t-esc="doc.currency_id.symbol"/>
+                                            </td>
+                                            <td style="border:1px solid #000; padding:5px 4px;
+                                                    text-align:center; vertical-align:middle;
+                                                    width:5%;">
+                                                <span t-field="line.product_uom_qty"
+                                                    t-options='{"widget":"integer"}'/>
+                                            </td>
+                                            <td style="border:1px solid #000; padding:5px 4px;
+                                                    text-align:center; vertical-align:middle;
+                                                    width:12%;">
+                                                <t t-esc="'%.3f' % total_ttc"/>&#160;<span t-esc="doc.currency_id.symbol"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+
+                        <!-- Ligne Prix Total TTC -->
+                        <div style="page-break-inside: avoid; margin-top: -1px;">
+                            <table width="100%" style="border-collapse: collapse; font-size: 11px;">
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="9"
+                                            style="border:1px solid #000; padding:5px 6px;
+                                                text-align:right; font-weight:bold;">
+                                            Prix Total TTC
+                                        </td>
+                                        <td style="border:1px solid #000; padding:5px 6px;
+                                                text-align:center; font-weight:bold; width:12%;">
+                                            <span t-field="doc.amount_total"
+                                                t-options='{"widget":"monetary",
+                                                            "display_currency":doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <!-- SECTION 5 – FOOTER TERMS -->
                         <table width="100%"
                                style="margin-top: 8px; border-collapse: collapse;">
-                            <tr>
+                             <tr>
                                 <td style="vertical-align: top; padding: 4px 0;">
-
-                                    <!-- Mode de livraison -->
                                     <p style="margin: 2px 0; font-weight: bold; font-size: 10px;">
                                         Mode de livraison&#160;:&#160;
-                                        <t t-if="doc.carrier_id">
-                                            <t t-esc="doc.carrier_id.name"/>
+                                        <t t-if="doc.xinxu_delivery_mode">
+                                            <span t-field="doc.xinxu_delivery_mode"/>
                                         </t>
-                                        <t t-elif="doc._fields.get('incoterm_id') and doc.incoterm_id">
-                                            <t t-esc="doc.incoterm_id.name"/>
-                                        </t>
-                                        <t t-else=""></t>
+                                        <t t-else="">-</t>
                                     </p>
-
-                                    <!-- Délai de livraison -->
                                     <p style="margin: 2px 0; font-weight: bold;
                                               font-size: 10px;">
                                         D&#233;lai de livraison&#160;:&#160;
@@ -387,11 +342,6 @@
                                         </t>
                                         <t t-else="">-</t>
                                     </p>
-
-                                    <!--
-                                        Modalité de paiement:
-                                        payment_term_id is guaranteed on sale.order.
-                                    -->
                                     <p style="margin: 2px 0; font-weight: bold;
                                               font-size: 10px;">
                                         Modalit&#233; de paiement&#160;:&#160;
@@ -400,10 +350,9 @@
                                         </t>
                                         <t t-else="">-</t>
                                     </p>
-
                                 </td>
-                            </tr>
-                        </table>
+                             </tr>
+                         </table>
 
                     </div>
                 </t>
