@@ -12,17 +12,25 @@ class SaleOrder(models.Model):
 
     xinxu_calc_type = fields.Selection(
         selection=[
-            ('local',   'Client Local (TND)'),
-            ('foreign', 'Client Étranger (EUR)'),
+            ('local',   'Client Local '),
+            ('foreign', 'Client Étranger '),
         ],
         string='Type de calcul',
         default='local',
         required=True,
         help="Détermine le tableau de calcul utilisé sur les lignes :\n"
-             "• Local    → chaîne douanière TND (6 étapes)\n"
-             "• Étranger → conversion EUR + marge (2 étapes)",
+             "• Local    → conversion + chaîne douanière (6 étapes)\n"
+             "• Étranger → conversion + marge (2 étapes)",
     )
+    # ─────────────────────────────────────────────────────────────────────────
+    # Champ : mode de livraison 
+    # ─────────────────────────────────────────────────────────────────────────
 
+    xinxu_delivery_mode = fields.Char(
+        string='Mode de livraison',
+        default='Rendu usine',
+        help="Mode de livraison.",
+    )
     # Lien vers le(s) BC fournisseur(s) créé(s) depuis ce devis
     xinxu_purchase_ids = fields.Many2many(
         comodel_name='purchase.order',
@@ -142,3 +150,12 @@ class SaleOrder(models.Model):
             'domain':    [('id', 'in', self.xinxu_purchase_ids.ids)],
             'target':    'current',
         }
+    # ─────────────────────────────────────────────────────────────────────────
+    # Copie du mode de livraison vers la facture
+    # ─────────────────────────────────────────────────────────────────────────
+
+    def _prepare_invoice(self):
+        """Override to copy the delivery mode from the sale order to the invoice."""
+        invoice_vals = super()._prepare_invoice()
+        invoice_vals['xinxu_delivery_mode'] = self.xinxu_delivery_mode
+        return invoice_vals

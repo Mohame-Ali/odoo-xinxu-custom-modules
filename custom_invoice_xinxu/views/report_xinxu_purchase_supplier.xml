@@ -22,7 +22,7 @@
          REPORT ACTION  (bound to purchase.order)
     ============================================================ -->
     <record id="action_report_xinxu_bc_foreign" model="ir.actions.report">
-        <field name="name">Bon de commande</field>
+        <field name="name">Bon de commande (Xinxu) </field>
         <field name="model">purchase.order</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">custom_invoice_xinxu.report_xinxu_purchase_supplier_document</field>

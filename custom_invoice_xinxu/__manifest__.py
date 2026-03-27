@@ -25,6 +25,9 @@
         'views/res_company_view.xml',
         'views/report_xinxu_purchase_supplier.xml',
         'views/report_xinxu_facture_foreign.xml',
+        'views/res_partner_view.xml',
+        'views/report_xinxu_facture_local.xml',
+
     ],
     'assets': {
         'web.report_assets_common': [

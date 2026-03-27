@@ -42,9 +42,11 @@ class SaleOrderLine(models.Model):
         string='Taux de conversion',
         digits=(16, 6),
         default=1.0,
-        help="LOCAL   : taux vers TND (ex : 3.20 pour USD→TND)\n"
-             "ÉTRANGER: taux vers EUR (ex : 0.93 pour USD→EUR)\n"
-             "Valeur définie par le manager.",
+        help="Taux de conversion vers la devise du devis.\n"
+            "Exemples :\n"
+            "- Devis en TND : saisir 3.20 pour convertir USD → TND\n"
+            "- Devis en EUR : saisir 0.93 pour convertir USD → EUR\n"
+            "À saisir manuellement (ne pas utiliser le taux automatique).",
     )
 
     x_margin_pct = fields.Float(
@@ -101,7 +103,7 @@ class SaleOrderLine(models.Model):
     )
 
     # ─────────────────────────────────────────────────────────────────────────
-    # CHAMPS CALCULÉS — TABLEAU LOCAL (TND)
+    # CHAMPS CALCULÉS — TABLEAU LOCAL 
     # ─────────────────────────────────────────────────────────────────────────
 
     x_total_price_orig = fields.Float(
@@ -110,14 +112,14 @@ class SaleOrderLine(models.Model):
         help="F = Prix fournisseur × (1 + Droits de douane %)",
     )
     x_price_tnd = fields.Float(
-        string='Prix en TND',
+        string='Prix après conversion',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="I = Prix total devise × Taux de conversion TND",
+        help="I = Prix total devise × Taux de conversion ",
     )
     x_price_fodec = fields.Float(
         string='Prix + FODEC',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="K = Prix TND × (1 + FODEC %)",
+        help="K = Prix après conversion × (1 + FODEC %)",
     )
     x_price_all_taxes = fields.Float(
         string='Prix avec impôt douane',
@@ -125,19 +127,19 @@ class SaleOrderLine(models.Model):
         help="M = Prix+FODEC × (1 + Impôt douane %)",
     )
     x_total_cost_tnd = fields.Float(
-        string='Coût total TND',
+        string='Coût total ',
         compute='_compute_local', store=True, digits=(16, 4),
         help="O = Prix toutes taxes × (1 + Avance sur Import %)",
     )
     x_prix_htva = fields.Float(
         string='Prix unitaire HTVA',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="Q = Coût total TND ÷ (1 − Marge %)",
+        help="Q = Coût total ÷ (1 − Marge %)",
     )
     x_marge_unitaire = fields.Float(
-        string='Marge unitaire (TND)',
+        string='Marge unitaire (local)',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="R = Prix HTVA − Coût total TND",
+        help="R = Prix HTVA − Coût total ",
     )
     x_montant_tva = fields.Float(
         string='Montant TVA',
@@ -155,39 +157,39 @@ class SaleOrderLine(models.Model):
         help="W = Prix TTC × Quantité",
     )
     x_marge_total_local = fields.Float(
-        string='Marge totale (TND)',
+        string='Marge totale (local)',
         compute='_compute_local', store=True, digits=(16, 4),
         help="X = Marge unitaire × Quantité",
     )
 
     # ─────────────────────────────────────────────────────────────────────────
-    # CHAMPS CALCULÉS — TABLEAU ÉTRANGER (EUR)
+    # CHAMPS CALCULÉS — TABLEAU ÉTRANGER 
     # ─────────────────────────────────────────────────────────────────────────
 
     x_price_eur = fields.Float(
-        string='Prix en EUR (coût)',
+        string='Coût converti',
         compute='_compute_foreign', store=True, digits=(16, 4),
-        help="K = Prix fournisseur × Taux de conversion EUR",
+        help="Prix fournisseur converti dans la devise du devis.",
     )
     x_unit_sell_price_eur = fields.Float(
-        string='Prix de vente unitaire (EUR)',
+        string='Prix de vente unitaire (converti)',
         compute='_compute_foreign', store=True, digits=(16, 4),
-        help="M = Prix EUR ÷ (1 − Marge %) → PRIX DE VENTE CLIENT",
+        help="Prix de vente unitaire proposé au client (coût converti ÷ (1 − Marge %)).",
     )
     x_prix_total_eur = fields.Float(
-        string='Prix total (EUR)',
+        string='Prix de vente suggéré ',
         compute='_compute_foreign', store=True, digits=(16, 4),
-        help="N = Quantité × Prix de vente unitaire EUR",
+        help="Montant total de la ligne = Quantité × Prix de vente suggéré.",
     )
     x_margin_value_eur = fields.Float(
-        string='Marge unitaire (EUR)',
+        string='Marge unitaire (étranger) ',
         compute='_compute_foreign', store=True, digits=(16, 4),
-        help="O = Prix de vente unitaire − Prix EUR (coût)",
+        help="Marge par unité = Prix de vente suggéré − Coût converti.",
     )
     x_marge_total_eur = fields.Float(
-        string='Marge totale (EUR)',
+        string='Marge totale (étranger)',
         compute='_compute_foreign', store=True, digits=(16, 4),
-        help="P = Marge unitaire × Quantité",
+        help="Marge totale = Marge unitaire × Quantité.",
     )
 
     # ─────────────────────────────────────────────────────────────────────────
@@ -265,6 +267,6 @@ class SaleOrderLine(models.Model):
             line.x_margin_value_eur    = o
             line.x_marge_total_eur     = p
 
-            # Écrire le prix de vente EUR dans price_unit — DANS la boucle for
+            # Écrire le prix de vente EUR dans price_unit — DANS la boucle for  
             if line.order_id.xinxu_calc_type == 'foreign':
                 line.price_unit = m
