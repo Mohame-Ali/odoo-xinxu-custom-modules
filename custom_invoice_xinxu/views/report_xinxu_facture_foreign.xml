@@ -122,34 +122,85 @@
                              Adresse (contact_address full string)
                              TELEPHONE
                         ========================================= -->
-                        <table width="100%" style="border: 1px solid #000; border-top: none; border-collapse: collapse; margin-bottom: 8px;">
-                            <tr>
-                                <td style="width: 60%; padding: 5px 8px; border: none;">
-                                    <strong>Client:</strong>
-                                    <span t-field="doc.partner_id.name"/>
-                                </td>
-                                <td style="width: 40%; padding: 5px 8px; border: none;">
-                                    <strong>Code client:</strong>
-                                    <t t-if="doc.partner_id.ref">
-                                        <span t-field="doc.partner_id.ref"/>
-                                    </t>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" style="padding: 2px 8px; border: none;">
-                                    <strong>Adresse:</strong>
-                                    <span t-field="doc.partner_id.contact_address"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" style="padding: 2px 8px 5px 8px; border: none;">
-                                    <strong>TELEPHONE:</strong>
-                                    <t t-if="doc.partner_id.phone">
-                                        <span t-field="doc.partner_id.phone"/>
-                                    </t>
-                                </td>
-                            </tr>
-                        </table>
+                        <table width="100%"
+                               style="border: 1px solid #000; border-top: none; border-collapse: collapse; margin-bottom: 8px;">
+                             <tr>
+                                <!-- Left : client details -->
+                                <td style="vertical-align: top; width: 65%; padding: 4px 8px;">
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        Client&#160;:&#160;
+                                        <t t-esc="doc.partner_id.name or '-'"/>
+                                    </p>
+
+                                    <!-- Full address with street2 support -->
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        Adresse&#160;:&#160;
+                                        <t t-esc="doc.partner_id.street or ''"/>
+                                        <t t-if="doc.partner_id.street2">
+                                            ,&#160;<t t-esc="doc.partner_id.street2"/>
+                                        </t>
+                                        <t t-if="doc.partner_id.city">
+                                            ,&#160;<t t-esc="doc.partner_id.city"/>
+                                        </t>
+                                        <t t-if="doc.partner_id.zip">
+                                            &#160;<t t-esc="doc.partner_id.zip"/>
+                                        </t>
+                                        <t t-if="doc.partner_id.country_id">
+                                            ,&#160;<t t-esc="doc.partner_id.country_id.name"/>
+                                        </t>
+                                    </p>
+
+                                    <!-- R.C. & NtF-->
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        <span style="display: inline-block; width: 45%;">
+                                            R.C.&#160;:&#160;
+                                            <t t-esc="doc.partner_id.company_registry or '-'"/>
+                                        </span>
+                                    </p>
+
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        NtF N&#160;&#160;
+                                        <t t-esc="doc.partner_id.vat or '-'"/>
+                                    </p>
+
+                                    <!-- MS N -->
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        MS N.&#160;:&#160;
+                                        <t t-esc="doc.partner_id.x_ms_number or '-'"/>
+                                    </p>
+
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        Email&#160;:&#160;
+                                        <t t-esc="doc.partner_id.email or '-'"/>
+                                    </p>
+
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        T&#201;L&#201;PHONE&#160;:&#160;
+                                        <t t-esc="doc.partner_id.phone or '-'"/>
+                                        <t t-if="doc.partner_id.mobile">
+                                            &#160;/&#160;Fax&#160;:&#160;
+                                            <t t-esc="doc.partner_id.mobile"/>
+                                        </t>
+                                    </p>
+                                 </td>
+
+                                <!-- Right : code client -->
+                                <td style="vertical-align: top; width: 35%; padding: 4px 8px;">
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        Code client&#160;:&#160;
+                                        <t t-esc="doc.partner_id.ref or '-'"/>
+                                    </p>
+                                    
+                                    <p style="margin: 2px 0; font-weight: bold;">
+                                        CODE BIC&#160;:&#160;
+                                        <t t-if="cbank and cbank[0].bank_id and cbank[0].bank_id.bic">
+                                            <t t-esc="cbank[0].bank_id.bic"/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </p>
+                                 </td>
+                             </tr>
+                         </table>
 
                         <!-- =========================================
                              SECTION 4 – LINES TABLE
@@ -211,7 +262,7 @@
                                 <tr>
                                     <td colspan="3" style="border: 1px solid #000; padding: 5px;"/>
                                     <td style="border: 1px solid #000; padding: 5px; text-align: right; font-weight: bold;">
-                                        Total CPT price
+                                        Total CPT price (<span t-field="doc.currency_id.name"/>)
                                     </td>
                                     <td style="border: 1px solid #000; padding: 5px; text-align: right; font-weight: bold;">
                                         <span t-field="doc.amount_total"
@@ -224,10 +275,7 @@
 
                         <!-- =========================================
                              SECTION 5 – FOOTER NOTES
-                             "Total says" auto-computed via
-                             currency.amount_to_text(amount) —
-                             same method as the default invoice template.
-
+                             
                              Delivery mode and Origin of goods come from
                              custom fields on the invoice (editable in
                              Facturation > invoice form > XINXU Export tab).
