@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_employee_form_mission_button" model="ir.ui.view">
+        <field name="name">hr.employee.form.mission.button</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_missions"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-suitcase"
+                        groups="xinxu_mission.group_mission_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="mission_count"/>
+                        </span>
+                        <span class="o_stat_text">Missions</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_employee_mission_budget_list" model="ir.ui.view">
+        <field name="name">hr.employee.mission.budget.list</field>
+        <field name="model">hr.employee</field>
+        <field name="arch" type="xml">
+            <list string="Budget Missions par Collaborateur"
+                  decoration-danger="mission_total_remaining &lt; 0"
+                  decoration-warning="mission_total_remaining == 0 and mission_approved_count &gt; 0">
+
+                <field name="name" string="Collaborateur"/>
+                <field name="job_id" string="Poste" optional="show"/>
+                <field name="department_id" string="Département" optional="show"/>
+
+                <field name="mission_count"
+                       string="Nb missions (total)"
+                       optional="show"/>
+                <field name="mission_approved_count"
+                       string="Missions approuvées"/>
+
+                <field name="mission_total_approved_budget"
+                       string="Budget approuvé"
+                       sum="Total budget"
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="mission_total_spent"
+                       string="Dépensé"
+                       sum="Total dépensé"
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="mission_total_remaining"
+                       string="Reste"
+                       sum="Total restant"
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id'}"/>
+
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="view_employee_mission_budget_form" model="ir.ui.view">
+        <field name="name">hr.employee.mission.budget.form</field>
+        <field name="model">hr.employee</field>
+        <field name="arch" type="xml">
+            <form string="Budget Missions — Collaborateur">
+                <sheet>
+                    <!-- ── Identity ── -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <h2>
+                            <field name="job_title" readonly="1" placeholder="Fonction"/>
+                        </h2>
+                    </div>
+
+                    <group>
+                        <group string="Informations">
+                            <field name="department_id" readonly="1"/>
+                            <field name="job_id" readonly="1"/>
+                            <field name="company_id" readonly="1"/>
+                        </group>
+                        <group string="Budget Missions (missions approuvées)">
+                            <field name="mission_count"
+                                   string="Total missions"/>
+                            <field name="mission_approved_count"
+                                   string="Missions approuvées"/>
+                            <field name="mission_total_approved_budget"
+                                   string="Budget approuvé total"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="mission_total_spent"
+                                   string="Total dépensé"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="mission_total_remaining"
+                                   string="Reste"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"
+                                   decoration-danger="mission_total_remaining &lt; 0"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <!-- ── Budget progress bar ── -->
+                    <group string="Utilisation du budget">
+                        <div class="o_field_widget" colspan="2"
+                             invisible="mission_total_approved_budget == 0">
+                            <div class="progress" style="height: 20px; margin: 8px 0;">
+                                <div class="progress-bar bg-success"
+                                     style="width: 100%; transition: none;"
+                                     role="progressbar"/>
+                            </div>
+                            <p class="text-muted" style="font-size: 12px;">
+                                Budget approuvé :
+                                <field name="mission_total_approved_budget"
+                                       widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"
+                                       readonly="1"/>
+                                — Dépensé :
+                                <field name="mission_total_spent"
+                                       widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"
+                                       readonly="1"/>
+                            </p>
+                        </div>
+                    </group>
+
+                    <!-- ── Missions list ── -->
+                    <notebook>
+                        <page string="Ordres de mission" name="missions">
+                            <field name="mission_ids"
+                                   mode="list"
+                                   nolabel="1"
+                                   readonly="1">
+                                <list string="Missions"
+                                      decoration-success="state == 'approved'"
+                                      decoration-danger="state == 'refused'"
+                                      decoration-info="state == 'submitted'">
+                                    <field name="name" string="Référence"/>
+                                    <field name="request_date" string="Date demande"/>
+                                    <field name="purpose" string="Motif"/>
+                                    <field name="state"
+                                           widget="badge"
+                                           decoration-danger="state == 'refused'"
+                                           decoration-success="state == 'approved'"
+                                           decoration-info="state == 'submitted'"/>
+                                    <field name="approved_budget"
+                                           string="Budget approuvé"
+                                           widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="spent_amount"
+                                           string="Dépensé"
+                                           widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="remaining_budget"
+                                           string="Reste"
+                                           widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Missions approuvées" name="approved_missions">
+                            <field name="mission_ids"
+                                   domain="[('state', '=', 'approved')]"
+                                   mode="list"
+                                   nolabel="1"
+                                   readonly="1">
+                                <list string="Missions approuvées">
+                                    <field name="name" string="Référence"/>
+                                    <field name="request_date" string="Date demande"/>
+                                    <field name="approval_date" string="Date approbation"/>
+                                    <field name="purpose" string="Motif"/>
+                                    <field name="approved_budget"
+                                           string="Budget approuvé"
+                                           sum="Total budget"
+                                           widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="spent_amount"
+                                           string="Dépensé"
+                                           sum="Total dépensé"
+                                           widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="remaining_budget"
+                                           string="Reste"
+                                           sum="Total restant"
+                                           widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_employee_mission_budget_search" model="ir.ui.view">
+        <field name="name">hr.employee.mission.budget.search</field>
+        <field name="model">hr.employee</field>
+        <field name="arch" type="xml">
+            <search string="Recherche collaborateurs">
+                <field name="name" string="Collaborateur"/>
+                <field name="department_id"/>
+                <field name="job_id"/>
+
+                <!-- Filters -->
+                <filter string="Avec missions approuvées"
+                        name="has_approved_missions"
+                        domain="[('mission_approved_count', '&gt;', 0)]"/>
+                <filter string="Budget dépassé"
+                        name="budget_exceeded"
+                        domain="[('mission_total_remaining', '&lt;', 0)]"/>
+                <filter string="Budget épuisé"
+                        name="budget_zero"
+                        domain="[('mission_total_remaining', '=', 0),
+                                  ('mission_approved_count', '&gt;', 0)]"/>
+
+                <!-- Group by -->
+                <group expand="0" string="Regrouper par">
+                    <filter string="Département" name="by_department"
+                            context="{'group_by': 'department_id'}"/>
+                    <filter string="Poste" name="by_job"
+                            context="{'group_by': 'job_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Manager action — all employees -->
+    <record id="action_employee_mission_budget_manager" model="ir.actions.act_window">
+        <field name="name">Budget par Collaborateur</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                      (0, 0, {'view_mode': 'list',
+                              'view_id': ref('view_employee_mission_budget_list')}),
+                      (0, 0, {'view_mode': 'form',
+                              'view_id': ref('view_employee_mission_budget_form')})]"/>
+        <field name="search_view_id" ref="view_employee_mission_budget_search"/>
+        <field name="context">{'search_default_has_approved_missions': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucun collaborateur trouvé.
+            </p>
+        </field>
+    </record>
+
+    <!-- User action — own employee record only -->
+    <record id="action_employee_mission_budget_own" model="ir.actions.act_window">
+        <field name="name">Mon Budget Mission</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                      (0, 0, {'view_mode': 'list',
+                              'view_id': ref('view_employee_mission_budget_list')}),
+                      (0, 0, {'view_mode': 'form',
+                              'view_id': ref('view_employee_mission_budget_form')})]"/>
+        <field name="search_view_id" ref="view_employee_mission_budget_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Votre fiche employée n'est pas encore configurée.
+                Contactez l'administrateur RH.
+            </p>
+        </field>
+    </record>
+
+    <!-- Sub-menu visible to Mission Managers only (sees all employees) -->
+    <menuitem id="menu_employee_mission_budget_manager"
+              name="Budget par Collaborateur"
+              parent="menu_mission_root"
+              action="action_employee_mission_budget_manager"
+              groups="xinxu_mission.group_mission_manager"
+              sequence="20"/>
+
+    <!-- Sub-menu visible to all Mission Users (sees only own employee) -->
+    <menuitem id="menu_employee_mission_budget_own"
+              name="Mon Budget Mission"
+              parent="menu_mission_root"
+              action="action_employee_mission_budget_own"
+              groups="xinxu_mission.group_mission_user"
+              sequence="25"/>
+
+</odoo>

@@ -1,0 +1,21 @@
+{
+    'name': 'XINXU Mission Orders',
+    'version': '1.0',
+    'category': 'Human Resources',
+    'summary': 'Mission orders with stages, linked expenses, budget tracking, and PDF report',
+    'depends': ['hr_expense', 'hr'],
+    'data': [
+        'security/mission_security.xml',
+        'security/access.xml',
+        'data/sequence_data.xml',
+        'views/mission_order_views.xml',
+        'views/mission_stage_views.xml',
+        'views/hr_expense_views.xml',
+        'views/hr_employee_mission_views.xml',
+        'reports/mission_report.xml',
+    ],
+    'license': 'LGPL-3',
+    'installable': True,
+    'application': True,
+    'auto_install': False,
+}

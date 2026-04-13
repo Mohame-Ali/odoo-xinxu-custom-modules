@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_xinxu_mission" model="ir.module.category">
+        <field name="name">XINXU - Missions</field>
+        <field name="description">XINXU Mission Orders</field>
+    </record>
+
+    <record id="group_mission_user" model="res.groups">
+        <field name="name">Mission User</field>
+        <field name="category_id" ref="module_category_xinxu_mission"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_mission_manager" model="res.groups">
+        <field name="name">Mission Manager</field>
+        <field name="category_id" ref="module_category_xinxu_mission"/>
+        <field name="implied_ids" eval="[(4, ref('group_mission_user'))]"/>
+    </record>
+
+    <!-- Record rule: Mission User can see only their own missions -->
+    <record id="rule_mission_user_own" model="ir.rule">
+        <field name="name">Mission: own orders only</field>
+        <field name="model_id" ref="model_mission_order"/>
+        <!-- Use employee_ids: same as user_id on employee, standard Odoo HR link -->
+        <field name="domain_force">[('employee_id', 'in', user.employee_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('group_mission_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Mission Manager can see all missions -->
+    <record id="rule_mission_manager_all" model="ir.rule">
+        <field name="name">Mission: manager all</field>
+        <field name="model_id" ref="model_mission_order"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_mission_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Expenses: restrict linking to own missions only -->
+    <record id="rule_expense_own_mission" model="ir.rule">
+        <field name="name">Expense: own mission only</field>
+        <field name="model_id" ref="hr_expense.model_hr_expense"/>
+        <field name="domain_force">[('mission_id.employee_id', 'in', user.employee_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('group_mission_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

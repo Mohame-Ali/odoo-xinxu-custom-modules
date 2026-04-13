@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_mission_order" model="ir.sequence">
+        <field name="name">Mission Order</field>
+        <field name="code">mission.order</field>
+        <field name="prefix">MISS/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>
