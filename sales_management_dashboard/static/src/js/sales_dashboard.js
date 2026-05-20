@@ -31,68 +31,67 @@ class SalesDashboard extends Component {
                 customer_filter: "this_week",
                 order_filter: "this_week",
                 invoice_filter: "this_week",
+                project_year_filter: null,
             },
         });
         onMounted(() => this._fetch_data());
     }
 
     async _fetch_data() {
-    const result = await this.orm.call(
-        "sale.order",
-        "get_sales_dashboard_data",
-        [],
-        { filters: this.state.filters }
-    );
+        const result = await this.orm.call(
+            "sale.order",
+            "get_sales_dashboard_data",
+            [],
+            { filters: this.state.filters }
+        );
 
-    this.state.data = result;
-    this._render_charts();
+        this.state.data = result;
+        this._render_charts();
     }
-
 
     goToRecord(model, id) {
         window.location.href = `/web#model=${model}&id=${id}&view_type=form`;
     }
-    async viewOrders(){
-    const domain = await this.orm.call(
-        "sale.order",
-        "get_tile_domain",
-        [],
-        {
-            base_domain: [['state', 'in', ['sale', 'done']]],
-            filters: this.state.filters
-        }
-    );
 
-    this.actionService.doAction({
-        type: "ir.actions.act_window",
-        name: "Sale Orders",
-        res_model: "sale.order",
-        domain,
-        views: [[false, "list"], [false, "form"]]
-    })
-    }
-
-    async viewQuotations(){
+    async viewOrders() {
         const domain = await this.orm.call(
             "sale.order",
             "get_tile_domain",
             [],
             {
-                base_domain: [['state', 'in', ['draft','sent']]],
+                base_domain: [['state', 'in', ['sale', 'done']]],
                 filters: this.state.filters
             }
         );
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            name: "Sale Orders",
+            res_model: "sale.order",
+            domain,
+            views: [[false, "list"], [false, "form"]]
+        });
+    }
 
+    async viewQuotations() {
+        const domain = await this.orm.call(
+            "sale.order",
+            "get_tile_domain",
+            [],
+            {
+                base_domain: [['state', 'in', ['draft', 'sent']]],
+                filters: this.state.filters
+            }
+        );
         this.actionService.doAction({
             type: "ir.actions.act_window",
             name: "Quotations",
             res_model: "sale.order",
             domain,
             views: [[false, "list"], [false, "form"]]
-        })
+        });
     }
 
-    async viewToInvoiceOrders(){
+    async viewToInvoiceOrders() {
         const domain = await this.orm.call(
             "sale.order",
             "get_tile_domain",
@@ -102,17 +101,16 @@ class SalesDashboard extends Component {
                 filters: this.state.filters
             }
         );
-
         this.actionService.doAction({
             type: "ir.actions.act_window",
             name: "To Invoice",
             res_model: "sale.order",
             domain,
             views: [[false, "list"], [false, "form"]]
-        })
+        });
     }
 
-    async viewFullyInvoicedOrders(){
+    async viewFullyInvoicedOrders() {
         const domain = await this.orm.call(
             "sale.order",
             "get_tile_domain",
@@ -122,14 +120,13 @@ class SalesDashboard extends Component {
                 filters: this.state.filters
             }
         );
-
         this.actionService.doAction({
             type: "ir.actions.act_window",
             name: "Fully Invoiced",
             res_model: "sale.order",
             domain,
             views: [[false, "list"], [false, "form"]]
-        })
+        });
     }
 
     _render_charts() {
@@ -153,6 +150,7 @@ class SalesDashboard extends Component {
                 }
             });
         };
+
         const bar = (id, labels, data, bg, chartKey) => {
             const ctx = document.getElementById(id);
             if (!ctx) return;
@@ -206,8 +204,7 @@ class SalesDashboard extends Component {
             ["#343a40", "#28a745", "#ffc107"],
             "invoice_status");
 
-        bar(
-            "overdueCustomersChart",
+        bar("overdueCustomersChart",
             d.overdue_customers.map(x => x.name),
             d.overdue_customers.map(x => x.amount),
             d.overdue_customers.map(x =>
@@ -221,42 +218,50 @@ class SalesDashboard extends Component {
             d.new_vs_returning.summary.values,
             ["#28a745", "#ffc107"],
             "new_vs_returning");
+
+        if (d.projects_per_year && d.projects_per_year.length) {
+            bar("projectsPerYearChart",
+                d.projects_per_year.map(x => x.year),
+                d.projects_per_year.map(x => x.count),
+                "#3490dc",
+                "projects_per_year");
+        }
     }
 
     onChangeGlobalFilter(ev) {
-    this.state.filters.global_filter = ev.target.value;
+        this.state.filters.global_filter = ev.target.value;
 
-    if (this.state.filters.global_filter === "select_period") {
-        this.state.filters = {
-            global_filter: "select_period",
-            custom_range: { from: null, to: null },
-            limit: "10",
-            team_filter: "this_week",
-            person_filter: "this_week",
-            product_filter: "this_week",
-            low_product_filter: "this_week",
-            customer_filter: "this_week",
-            order_filter: "this_week",
-            invoice_filter: "this_week",
-            overdue_filter: "this_week",
-            nvrc_filter: "this_week",
-        };
+        if (this.state.filters.global_filter === "select_period") {
+            this.state.filters = {
+                global_filter: "select_period",
+                custom_range: { from: null, to: null },
+                limit: "10",
+                team_filter: "this_week",
+                person_filter: "this_week",
+                product_filter: "this_week",
+                low_product_filter: "this_week",
+                customer_filter: "this_week",
+                order_filter: "this_week",
+                invoice_filter: "this_week",
+                overdue_filter: "this_week",
+                nvrc_filter: "this_week",
+                project_year_filter: null,
+            };
+            this.render();
+            this._fetch_data();
+            return;
+        }
 
-        this.render();
+        if (this.state.filters.global_filter !== "custom") {
+            this.state.filters.custom_range = { from: null, to: null };
+        }
+
         this._fetch_data();
-        return;
     }
-
-    if (this.state.filters.global_filter !== "custom") {
-        this.state.filters.custom_range = { from: null, to: null };
-    }
-
-    this._fetch_data();
-}
 
     onChangeCustomFrom(ev) {
-    this.state.filters.custom_range.from = ev.target.value;
-    this._maybeFetchCustom();
+        this.state.filters.custom_range.from = ev.target.value;
+        this._maybeFetchCustom();
     }
 
     onChangeCustomTo(ev) {
@@ -277,16 +282,19 @@ class SalesDashboard extends Component {
         this.state.filters.team_filter = ev.target.value;
         this._fetch_data();
     }
+
     onChangePersonFilter(ev) {
         if (this.state.filters.global_filter === "custom") return;
         this.state.filters.person_filter = ev.target.value;
         this._fetch_data();
     }
+
     onChangeCustomerFilter(ev) {
         if (this.state.filters.global_filter === "custom") return;
         this.state.filters.customer_filter = ev.target.value;
         this._fetch_data();
     }
+
     onChangeOrderFilter(ev) {
         if (this.state.filters.global_filter === "custom") return;
         this.state.filters.order_filter = ev.target.value;
@@ -298,40 +306,53 @@ class SalesDashboard extends Component {
         this.state.filters.invoice_filter = ev.target.value;
         this._fetch_data();
     }
+
     onChangeProductFilter(ev) {
         if (this.state.filters.global_filter === "custom") return;
         this.state.filters.product_filter = ev.target.value;
         this._fetch_data();
     }
+
     onChangeProductCategory(ev) {
         const val = ev.target.value;
         this.state.filters.product_category_id = val ? parseInt(val) : null;
         this._fetch_data();
     }
+
     onChangeLowProductFilter(ev) {
         if (this.state.filters.global_filter === "custom") return;
         this.state.filters.low_product_filter = ev.target.value;
         this._fetch_data();
     }
+
     onChangeLowProductCategory(ev) {
         const val = ev.target.value;
         this.state.filters.low_product_category_id = val ? parseInt(val) : null;
         this._fetch_data();
     }
+
     onChangeOverdueFilter(ev) {
         if (this.state.filters.global_filter === "custom") return;
         this.state.filters.overdue_filter = ev.target.value;
         this._fetch_data();
     }
+
     onChangeNvRFilter(ev) {
         if (this.state.filters.global_filter === "custom") return;
         this.state.filters.nvrc_filter = ev.target.value;
         this._fetch_data();
     }
+
     onChangeGlobalLimit(ev) {
         this.state.filters.limit = parseInt(ev.target.value);
         this._fetch_data();
     }
+
+    onChangeProjectYearFilter(ev) {
+        this.state.filters.project_year_filter = ev.target.value || null;
+        this._fetch_data();
+    }
 }
+
 SalesDashboard.template = "sales_management_dashboard.SalesDashboardTemplate";
 registry.category("actions").add("sales_dashboard", SalesDashboard);

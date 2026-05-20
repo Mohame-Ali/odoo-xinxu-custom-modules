@@ -46,8 +46,6 @@
                 </div>
 
                <div class="row justify-content-center my-4">
-                <!-- First Row -->
-                <!-- Sale Orders -->
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card border rounded-4 text-center shadow-sm position-relative" style="cursor: pointer; height: 160px; background-color: #3490dc;" role="button" t-on-click="viewOrders">
                         <div class="icon-box position-absolute"
@@ -70,7 +68,6 @@
                     </div>
                 </div>
 
-                <!-- Quotations -->
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card border rounded-4 text-center shadow-sm position-relative" style="cursor: pointer; height: 160px; background-color: #38c172;" role="button" t-on-click="viewQuotations">
                         <div class="icon-box position-absolute"
@@ -93,7 +90,6 @@
                     </div>
                 </div>
 
-                <!-- Orders to Invoice -->
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card border rounded-4 text-center shadow-sm position-relative" style="cursor: pointer; height: 160px; background-color: #ff9800;" role="button" t-on-click="viewToInvoiceOrders">
                         <div class="icon-box position-absolute"
@@ -116,7 +112,6 @@
                     </div>
                 </div>
 
-                <!-- Fully Invoiced -->
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card border rounded-4 text-center shadow-sm position-relative" style="cursor: pointer; height: 160px; background-color: #9f7aea;" role="button" t-on-click="viewFullyInvoicedOrders">
                         <div class="icon-box position-absolute"
@@ -139,8 +134,7 @@
                     </div>
                 </div>
                </div>
-            <!-- Second Row -->
-            <!-- Order Conversion Rate -->
+
             <div class="row justify-content-center my-4">
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card border rounded-4 text-center shadow-sm position-relative" style="cursor: pointer; height: 160px; background-color: #ff9800;">
@@ -153,7 +147,7 @@
                                 backdrop-filter: blur(8px);
                                 border: 1px solid rgba(255,255,255,0.2);
                                 box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
-                            <i class="fa fa-angle-double-right  text-white" style="font-size: 22px;"></i>
+                            <i class="fa fa-angle-double-right text-white" style="font-size: 22px;"></i>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-center mt-2">
                             <h3 class="mb-2 fw-bold">Order Conversion Rate</h3>
@@ -163,7 +157,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Total Revenue MTD -->
+
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card border rounded-4 text-center shadow-sm position-relative" style="cursor: pointer; height: 160px; background-color: #9f7aea;">
                         <div class="icon-box position-absolute"
@@ -175,7 +169,7 @@
                                 backdrop-filter: blur(8px);
                                 border: 1px solid rgba(255,255,255,0.2);
                                 box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
-                            <i class="fa fa-money  text-white" style="font-size: 22px;"></i>
+                            <i class="fa fa-money text-white" style="font-size: 22px;"></i>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-center mt-2">
                             <h3 class="mb-2 fw-bold">Total Revenue MTD</h3>
@@ -185,7 +179,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Total Revenue YTD -->
+
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card border rounded-4 text-center shadow-sm position-relative" style="cursor: pointer; height: 160px; background-color: #3490dc;">
                         <div class="icon-box position-absolute"
@@ -197,7 +191,7 @@
                                 backdrop-filter: blur(8px);
                                 border: 1px solid rgba(255,255,255,0.2);
                                 box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
-                            <i class="fa fa-money  text-white" style="font-size: 22px;"></i>
+                            <i class="fa fa-money text-white" style="font-size: 22px;"></i>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-center mt-2">
                             <h3 class="mb-2 fw-bold">Total Revenue YTD</h3>
@@ -207,7 +201,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Average Order Value -->
+
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card border rounded-4 text-center shadow-sm position-relative" style="cursor: pointer; height: 160px; background-color: #38c172;">
                         <div class="icon-box position-absolute"
@@ -219,7 +213,7 @@
                                 backdrop-filter: blur(8px);
                                 border: 1px solid rgba(255,255,255,0.2);
                                 box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
-                            <i class="fa fa-money  text-white" style="font-size: 22px;"></i>
+                            <i class="fa fa-money text-white" style="font-size: 22px;"></i>
                         </div>
                         <div class="card-body d-flex flex-column justify-content-center mt-2">
                             <h3 class="mb-2 fw-bold">Average Order Value</h3>
@@ -232,7 +226,6 @@
             </div>
 
             <div class="row mb-4">
-                <!-- Sales by Team -->
                 <div class="col-md-6 mb-3">
                     <div class="card shadow-sm">
                         <div class="card-header bg-primary text-white fw-bold">Sales by Team</div>
@@ -266,7 +259,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Sales by Person -->
+
                 <div class="col-md-6 mb-3">
                     <div class="card shadow-sm">
                         <div class="card-header bg-info text-white fw-bold">Sales by Person</div>
@@ -298,9 +291,8 @@
                     </div>
                 </div>
             </div>
-            <!-- Row 2: Top & Lowest Products -->
+
             <div class="row mb-4">
-                <!-- Top Products -->
                 <div class="col-md-6 mb-3">
                     <div class="card shadow-sm">
                         <div class="card-header bg-success text-white fw-bold">Top Selling Products</div>
@@ -342,7 +334,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Lowest Products -->
+
                 <div class="col-md-6 mb-3">
                     <div class="card shadow-sm">
                         <div class="card-header bg-danger text-white fw-bold">Least Selling Products</div>
@@ -382,7 +374,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Row 3: Top Customers -->
+
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="card shadow-sm">
@@ -414,9 +406,8 @@
                     </div>
                 </div>
             </div>
-            <!-- Row 4: Order & Invoice Status -->
+
             <div class="row mb-4">
-                <!-- Order Status -->
                 <div class="col-md-6 mb-3">
                     <div class="card shadow-sm">
                         <div class="card-header bg-secondary text-black fw-bold">Order Status</div>
@@ -447,7 +438,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Invoice Status -->
+
                 <div class="col-md-6 mb-3">
                     <div class="card shadow-sm">
                         <div class="card-header bg-dark text-white fw-bold">Invoice Status</div>
@@ -479,9 +470,8 @@
                     </div>
                 </div>
             </div>
-            <!-- Row 5: Overdue Customers & New vs Returning Customers -->
+
             <div class="row mb-4">
-                <!-- Overdue Customers -->
                 <div class="col-md-6 mb-3">
                     <div class="card shadow-sm">
                         <div class="card-header bg-danger text-white fw-bold">Overdue Customers</div>
@@ -512,7 +502,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- New vs Returning Customers -->
+
                 <div class="col-md-6 mb-3">
                     <div class="card shadow-sm">
                         <div class="card-header bg-success text-white fw-bold">New vs Returning Customers</div>
@@ -540,8 +530,6 @@
                                             </tr>
                                         </tbody>
                                     </table>
-
-                                    <!-- Returning Customers -->
                                     <h5 class="mt-3">Returning Customers</h5>
                                     <table class="table table-bordered table-sm table-hover mt-2">
                                         <thead class="table-light">
@@ -558,6 +546,117 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Project Metrics Section -->
+            <h4 class="fw-bold text-primary mb-3 mt-2">🏗️ Project Analytics</h4>
+
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <label class="fw-semibold mb-0">Filter by Year:</label>
+                <select class="form-select w-auto" style="box-shadow: 0 2px 6px rgba(0,0,0,0.2);"
+                        t-on-change="onChangeProjectYearFilter">
+                    <option value="">All Years</option>
+                    <t t-foreach="state.data.project_available_years || []" t-as="yr" t-key="yr">
+                        <option t-att-value="yr" t-esc="yr"/>
+                    </t>
+                </select>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-header fw-bold text-white" style="background-color: #3490dc;">Projects per Year</div>
+                        <div class="card-body">
+                            <canvas id="projectsPerYearChart" height="220" style="cursor: pointer;"></canvas>
+                            <table class="table table-bordered table-sm table-hover mt-3">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Year</th>
+                                        <th class="text-end">Projects</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.data.projects_per_year || []" t-as="row" t-key="row.year">
+                                        <tr>
+                                            <td t-esc="row.year"/>
+                                            <td class="text-end fw-bold" t-esc="row.count"/>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-header fw-bold text-white" style="background-color: #38c172;">Revenue per Project</div>
+                        <div class="card-body">
+                            <table class="table table-bordered table-sm table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Project</th>
+                                        <th class="text-end">Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.data.revenue_per_project || []" t-as="proj" t-key="proj.id">
+                                        <tr class="clickable-row" t-on-click="() => goToRecord('xinxu.project', proj.id)">
+                                            <td t-esc="proj.name"/>
+                                            <td class="text-end fw-bold" t-esc="proj.revenue"/>
+                                        </tr>
+                                    </t>
+                                    <tr t-if="(state.data.revenue_per_project || []).length === 0">
+                                        <td colspan="2" class="text-center text-muted">No project data available.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header fw-bold text-white" style="background-color: #9f7aea;">Average Revenue per Person per Project</div>
+                        <div class="card-body">
+                            <table class="table table-bordered table-sm table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Project</th>
+                                        <th>Salesperson</th>
+                                        <th class="text-end">Revenue</th>
+                                        <th class="text-end">Avg / Person</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.data.avg_revenue_per_person || []" t-as="proj" t-key="proj.id">
+                                        <t t-foreach="proj.persons" t-as="person" t-key="person.name">
+                                            <tr>
+                                                <td t-if="person_index === 0"
+                                                    t-att-rowspan="proj.persons.length"
+                                                    class="align-middle fw-bold clickable-row"
+                                                    t-on-click="() => goToRecord('xinxu.project', proj.id)"
+                                                    t-esc="proj.project"/>
+                                                <td t-esc="person.name"/>
+                                                <td class="text-end" t-esc="person.revenue"/>
+                                                <td t-if="person_index === 0"
+                                                    t-att-rowspan="proj.persons.length"
+                                                    class="text-end align-middle fw-bold"
+                                                    t-esc="proj.avg_per_person"/>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <tr t-if="(state.data.avg_revenue_per_person || []).length === 0">
+                                        <td colspan="4" class="text-center text-muted">No data available.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </t>
 </templates>

@@ -1,35 +1,13 @@
 # -*- coding: utf-8 -*-
-#############################################################################
-#
-#    Cybrosys Technologies Pvt. Ltd.
-#
-#    Copyright (C) 2025-TODAY Cybrosys Technologies(<https://www.cybrosys.com>)
-#    Author: Cybrosys Techno Solutions(<https://www.cybrosys.com>)
-#
-#    You can modify it under the terms of the GNU LESSER
-#    GENERAL PUBLIC LICENSE (LGPL v3), Version 3.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU LESSER GENERAL PUBLIC LICENSE (LGPL v3) for more details.
-#
-#    You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
-#    (LGPL v3) along with this program.
-#    If not, see <http://www.gnu.org/licenses/>.
-#
-#############################################################################
 from odoo import models, api, fields
 from datetime import date, timedelta
 from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
-    """Extends sale.order model to fetch data to be displayed in the dashboard"""
     _inherit = 'sale.order'
 
     def _get_range(self, filter_key, custom_start=None, custom_end=None):
-        """Manages the date range according to the filter selected"""
         today = date.today()
 
         if filter_key == 'this_week':
@@ -51,7 +29,6 @@ class SaleOrder(models.Model):
         return None, None
 
     def _build_global_domain(self, base_domain, filters, date_field="date_order"):
-        """Build domain with global filter applied"""
         global_filter = filters.get("global_filter", "this_week")
         if global_filter == "select_period":
             global_filter = "this_week"
@@ -75,18 +52,14 @@ class SaleOrder(models.Model):
 
     @api.model
     def get_tile_domain(self, base_domain, filters):
-        """Get domain for tile clicks with global filter applied"""
-        filterss = self._build_global_domain(base_domain, filters)
         return self._build_global_domain(base_domain, filters)
 
     @api.model
     def get_sales_dashboard_data(self, filters=None):
-        """Fetches the datas to be displayed"""
         filters = filters or {}
         limit = int(filters.get("limit", 10))
 
         def get_filter_key(specific_filter_key):
-            """Build and return a domain combining base_domain with global date filters."""
             global_filter = filters.get("global_filter", "this_week")
             if global_filter == "custom":
                 return "custom"
@@ -96,7 +69,6 @@ class SaleOrder(models.Model):
                 return global_filter
 
         def build_domain(base_domain, specific_filter_key, date_field="date_order"):
-            """Attach date domain based on the filter key"""
             filter_key = get_filter_key(specific_filter_key)
 
             if filter_key == "custom":
@@ -192,15 +164,15 @@ class SaleOrder(models.Model):
             for rec in invoice_status_grouped
         ]
 
-        overdue_customers_domain =build_domain([
+        overdue_customers_domain = build_domain([
             ('move_type', '=', 'out_invoice'),
             ('payment_state', '!=', 'paid'),
             ('invoice_date_due', '<', fields.Date.today())
-        ],"overdue_filter","invoice_date")
+        ], "overdue_filter", "invoice_date")
         overdue_customers_grouped = self.env['account.move'].read_group(
             overdue_customers_domain, ['amount_total'], ['partner_id'], orderby='amount_total desc', limit=limit
         )
-        overdue_customers =[
+        overdue_customers = [
             {'id': rec['partner_id'][0], 'name': rec['partner_id'][1], 'amount': rec['amount_total']}
             for rec in overdue_customers_grouped if rec['partner_id']
         ]
@@ -230,7 +202,6 @@ class SaleOrder(models.Model):
         year_start = today.replace(month=1, day=1)
 
         def _get_total(start_date):
-            """To find the total amount by grouping the orders based on the currency"""
             groups = SaleOrder.read_group(
                 [('state', '=', 'sale'), ('date_order', '>=', start_date)],
                 ['amount_total:sum'],
@@ -330,6 +301,104 @@ class SaleOrder(models.Model):
             }
         }
 
+        # ── Project metrics ──────────────────────────────────────────────────
+
+        project_year_filter = filters.get("project_year_filter")
+        all_projects = self.env['xinxu.project'].search([])
+
+        projects_per_year = {}
+        for proj in all_projects:
+            yr = str(proj.year)
+            projects_per_year[yr] = projects_per_year.get(yr, 0) + 1
+
+        projects_per_year_list = [
+            {'year': yr, 'count': cnt}
+            for yr, cnt in sorted(projects_per_year.items(), reverse=True)
+        ]
+
+        project_domain = [
+            ('state', 'in', ['sale', 'done']),
+            ('xinxu_project_id', '!=', False),
+        ]
+        if project_year_filter:
+            project_domain.append(('xinxu_project_id.year', '=', int(project_year_filter)))
+
+        revenue_groups = self.read_group(
+            project_domain,
+            ['amount_total', 'currency_id'],
+            ['xinxu_project_id', 'currency_id'],
+            lazy=False,
+        )
+
+        project_revenue_map = {}
+        for g in revenue_groups:
+            if not g.get('xinxu_project_id'):
+                continue
+            proj_id, proj_name = g['xinxu_project_id']
+            currency_id = g['currency_id'][0] if g['currency_id'] else False
+            amount = g.get('amount_total', 0.0)
+            if currency_id:
+                currency = self.env['res.currency'].browse(currency_id)
+                amount = currency._convert(amount, company_currency, self.env.company, today)
+            if proj_id not in project_revenue_map:
+                project_revenue_map[proj_id] = {'id': proj_id, 'name': proj_name, 'revenue': 0.0}
+            project_revenue_map[proj_id]['revenue'] += amount
+
+        revenue_per_project = sorted(
+            project_revenue_map.values(), key=lambda x: x['revenue'], reverse=True
+        )
+        for item in revenue_per_project:
+            item['revenue'] = company_currency.format(item['revenue'])
+
+        person_project_domain = [
+            ('state', 'in', ['sale', 'done']),
+            ('xinxu_project_id', '!=', False),
+        ]
+        if project_year_filter:
+            person_project_domain.append(('xinxu_project_id.year', '=', int(project_year_filter)))
+
+        person_project_groups = self.read_group(
+            person_project_domain,
+            ['amount_total', 'currency_id'],
+            ['xinxu_project_id', 'user_id', 'currency_id'],
+            lazy=False,
+        )
+
+        proj_person_totals = {}
+        for g in person_project_groups:
+            if not g.get('xinxu_project_id') or not g.get('user_id'):
+                continue
+            proj_id, proj_name = g['xinxu_project_id']
+            user_id, user_name = g['user_id']
+            currency_id = g['currency_id'][0] if g['currency_id'] else False
+            amount = g.get('amount_total', 0.0)
+            if currency_id:
+                currency = self.env['res.currency'].browse(currency_id)
+                amount = currency._convert(amount, company_currency, self.env.company, today)
+
+            if proj_id not in proj_person_totals:
+                proj_person_totals[proj_id] = {'name': proj_name, 'persons': {}}
+            proj_person_totals[proj_id]['persons'].setdefault(user_id, {'name': user_name, 'total': 0.0})
+            proj_person_totals[proj_id]['persons'][user_id]['total'] += amount
+
+        avg_revenue_per_person = []
+        for proj_id, data in proj_person_totals.items():
+            persons_list = list(data['persons'].values())
+            avg = sum(p['total'] for p in persons_list) / len(persons_list) if persons_list else 0.0
+            avg_revenue_per_person.append({
+                'id': proj_id,
+                'project': data['name'],
+                'avg_per_person': company_currency.format(avg),
+                'persons': [
+                    {'name': p['name'], 'revenue': company_currency.format(p['total'])}
+                    for p in persons_list
+                ],
+            })
+
+        available_years = sorted(
+            {str(p.year) for p in all_projects}, reverse=True
+        )
+
         return {
             'sales_by_team': teams,
             'sales_by_person': persons,
@@ -342,4 +411,8 @@ class SaleOrder(models.Model):
             'product_categories': product_categories,
             'sales_info': sales_info,
             'new_vs_returning': new_vs_returning,
+            'projects_per_year': projects_per_year_list,
+            'revenue_per_project': revenue_per_project,
+            'avg_revenue_per_person': avg_revenue_per_person,
+            'project_available_years': available_years,
         }
