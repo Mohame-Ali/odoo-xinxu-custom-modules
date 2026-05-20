@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_xinxu_project_list" model="ir.ui.view">
+        <field name="name">xinxu.project.list</field>
+        <field name="model">xinxu.project</field>
+        <field name="arch" type="xml">
+            <list string="Projects" decoration-muted="status == 'cancelled'" decoration-success="status == 'completed'">
+                <field name="name"/>
+                <field name="year"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'completed'"
+                       decoration-danger="status == 'cancelled'"
+                       decoration-info="status == 'active'"/>
+                <field name="order_count" string="Orders"/>
+                <field name="total_revenue" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_xinxu_project_form" model="ir.ui.view">
+        <field name="name">xinxu.project.form</field>
+        <field name="model">xinxu.project</field>
+        <field name="arch" type="xml">
+            <form string="Project">
+                <header>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="active,completed,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_orders" type="object"
+                                class="oe_stat_button" icon="fa-shopping-cart"
+                                invisible="order_count == 0">
+                            <field name="order_count" widget="statinfo" string="Orders"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Project Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="year"/>
+                            <field name="partner_id"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="total_revenue" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Orders / Quotations" name="orders">
+                            <field name="sale_order_ids" mode="list" readonly="1">
+                                <list string="Orders">
+                                    <field name="name"/>
+                                    <field name="date_order"/>
+                                    <field name="partner_id"/>
+                                    <field name="user_id"/>
+                                    <field name="amount_total" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'sale'"
+                                           decoration-info="state == 'sent'"
+                                           decoration-muted="state in ('cancel', 'done')"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Internal notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_xinxu_project_search" model="ir.ui.view">
+        <field name="name">xinxu.project.search</field>
+        <field name="model">xinxu.project</field>
+        <field name="arch" type="xml">
+            <search string="Projects">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="year"/>
+                <filter string="Active" name="active" domain="[('status', '=', 'active')]"/>
+                <filter string="Completed" name="completed" domain="[('status', '=', 'completed')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Year" name="by_year" context="{'group_by': 'year'}"/>
+                    <filter string="Status" name="by_status" context="{'group_by': 'status'}"/>
+                    <filter string="Responsible" name="by_user" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_xinxu_project" model="ir.actions.act_window">
+        <field name="name">Projects</field>
+        <field name="res_model">xinxu.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_xinxu_project_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+
+    <menuitem id="menu_xinxu_project"
+              name="Projects"
+              parent="sale.sale_menu_root"
+              action="action_xinxu_project"
+              sequence="6"/>
+
+</odoo>
