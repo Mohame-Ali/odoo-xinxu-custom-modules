@@ -4,7 +4,7 @@
     'version': '18.0.1.0.0',
     'category': 'Sales',
     'summary': 'Project entity for linking sale orders to commercial projects.',
-    'depends': ['sale_management'],
+    'depends': ['sale_management', 'project'],
     'data': [
         'security/ir.model.access.csv',
         'views/xinxu_project_views.xml',
