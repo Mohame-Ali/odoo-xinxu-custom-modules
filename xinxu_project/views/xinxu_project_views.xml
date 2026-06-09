@@ -27,6 +27,11 @@
         <field name="arch" type="xml">
             <form string="Project">
                 <header>
+                    <button name="action_create_project"
+                            string="Create Operational Project"
+                            type="object"
+                            class="btn-primary"
+                            invisible="project_id != False"/>
                     <field name="status" widget="statusbar"
                            statusbar_visible="active,completed,cancelled"/>
                 </header>
@@ -36,6 +41,11 @@
                                 class="oe_stat_button" icon="fa-shopping-cart"
                                 invisible="order_count == 0">
                             <field name="order_count" widget="statinfo" string="Orders"/>
+                        </button>
+                        <button name="action_view_tasks" type="object"
+                                class="oe_stat_button" icon="fa-tasks"
+                                invisible="project_id == False">
+                            <field name="task_count" widget="statinfo" string="Tasks"/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -48,6 +58,7 @@
                             <field name="year"/>
                             <field name="partner_id"/>
                             <field name="user_id"/>
+                            <field name="project_id" options="{'no_create': False}"/>
                         </group>
                         <group>
                             <field name="total_revenue" widget="monetary"
