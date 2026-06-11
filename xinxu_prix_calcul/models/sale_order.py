@@ -100,13 +100,12 @@ class SaleOrder(models.Model):
             po_lines = []
             for sl in supplier_lines:
                 po_lines.append((0, 0, {
-                    'product_id':      sl.product_id.id,
+                    'product_id':      sl.product_id.id,    
                     'name':            sl.name,
                     'product_qty':     sl.product_uom_qty,
                     'product_uom':     sl.product_uom.id,
-                    # Prix fournisseur = price_unit de la ligne de vente
-                    # (c'est le prix achat saisi dans le Tableau de Calcul)
-                    'price_unit':      sl.price_unit,
+                     # Prix fournisseur = prix d'achat saisi dans le Tableau de Calcul
+                    'price_unit':      sl.x_supplier_price,
                     'date_planned':    fields.Datetime.now(),
                 }))
 
