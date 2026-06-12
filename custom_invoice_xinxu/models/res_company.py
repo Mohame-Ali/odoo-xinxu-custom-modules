@@ -15,16 +15,13 @@ class ResCompany(models.Model):
 
     xinxu_rib = fields.Char(
         string='RIB',
-        help='Bank account number (RIB) displayed on the invoice header. '
-             'Example: 04 305 056 0074613696 86',
+        help="Bank account number (RIB) shown on document headers.",
     )
     xinxu_bank_name = fields.Char(
-        string='Banque',
-        help='Name of the company bank shown on the invoice header. '
-             'Example: Attijari Banque',
+        string='Bank',
+        help="Company bank name shown on document headers.",
     )
     xinxu_bank_agency = fields.Char(
-        string='Agence bancaire',
-        help='Bank branch / agency shown on the invoice header. '
-             'Example: Bou Argoub',
+        string='Bank Agency',
+        help="Bank agency shown on document headers.",
     )

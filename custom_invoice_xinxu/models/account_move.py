@@ -16,11 +16,10 @@ class AccountMove(models.Model):
     xinxu_delivery_mode = fields.Char(
         string='Delivery Mode',
         default='CPT ALGERIA',
-        help='Displayed in the invoice footer. '
-             'Example: CPT ALGERIA',
+        help="Delivery mode shown in the document footer.",
     )
     xinxu_origin_of_goods = fields.Char(
         string='Origin of Goods',
         default='TUNISIA',
-        help='Country / region of origin displayed in the invoice footer.',
+        help="Country or region of origin shown in the document footer.",
     )

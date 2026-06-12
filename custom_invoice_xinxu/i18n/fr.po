@@ -1,0 +1,82 @@
+# Translation of custom_invoice_xinxu (French)
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: custom_invoice_xinxu
+#: model:ir.model.fields,field_description:custom_invoice_xinxu.field_res_company__xinxu_bank_name
+msgid "Bank"
+msgstr "Banque"
+
+#. module: custom_invoice_xinxu
+#: model:ir.model.fields,field_description:custom_invoice_xinxu.field_res_company__xinxu_bank_agency
+msgid "Bank Agency"
+msgstr "Agence bancaire"
+
+#. module: custom_invoice_xinxu
+#: model:ir.model.fields,field_description:custom_invoice_xinxu.field_account_move__xinxu_delivery_mode
+msgid "Delivery Mode"
+msgstr "Mode de livraison"
+
+#. module: custom_invoice_xinxu
+#: model:ir.model.fields,field_description:custom_invoice_xinxu.field_account_move__xinxu_origin_of_goods
+msgid "Origin of Goods"
+msgstr "Origine des marchandises"
+
+#. module: custom_invoice_xinxu
+#: model:ir.model.fields,field_description:custom_invoice_xinxu.field_res_partner__x_ms_number
+msgid "Statistical No."
+msgstr "Matricule statistique"
+
+#. module: custom_invoice_xinxu
+#: model:ir.model.fields,help:custom_invoice_xinxu.field_res_company__xinxu_rib
+msgid "Bank account number (RIB) shown on document headers."
+msgstr "Numéro de compte bancaire (RIB) affiché en en-tête des documents."
+
+#. module: custom_invoice_xinxu
+#: model:ir.model.fields,help:custom_invoice_xinxu.field_res_company__xinxu_bank_name
+msgid "Company bank name shown on document headers."
+msgstr "Nom de la banque de la société affiché en en-tête des documents."
+
+#. module: custom_invoice_xinxu
+#: model:ir.model.fields,help:custom_invoice_xinxu.field_res_company__xinxu_bank_agency
+msgid "Bank agency shown on document headers."
+msgstr "Agence bancaire affichée en en-tête des documents."
+
+#. module: custom_invoice_xinxu
+#: model:ir.model.fields,help:custom_invoice_xinxu.field_account_move__xinxu_delivery_mode
+msgid "Delivery mode shown in the document footer."
+msgstr "Mode de livraison affiché en pied de page du document."
+
+#. module: custom_invoice_xinxu
+#: model:ir.model.fields,help:custom_invoice_xinxu.field_account_move__xinxu_origin_of_goods
+msgid "Country or region of origin shown in the document footer."
+msgstr "Pays ou région d'origine affiché en pied de page du document."
+
+#. module: custom_invoice_xinxu
+#: model:ir.model.fields,help:custom_invoice_xinxu.field_res_partner__x_ms_number
+msgid "Customer statistical registration number."
+msgstr "Matricule statistique du client."
+
+#. module: custom_invoice_xinxu
+#: model_terms:ir.ui.view,arch_db:custom_invoice_xinxu.view_company_form_xinxu
+msgid "XINXU Banking"
+msgstr "Coordonnées bancaires XINXU"
+
+#. module: custom_invoice_xinxu
+#: model_terms:ir.ui.view,arch_db:custom_invoice_xinxu.view_move_form_xinxu
+msgid "XINXU Export"
+msgstr "Export XINXU"
+
+#. module: custom_invoice_xinxu
+#: model_terms:ir.ui.view,arch_db:custom_invoice_xinxu.view_partner_form_xinxu
+msgid "XINXU Specific"
+msgstr "Spécifique XINXU"
