@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class XinxuProject(models.Model):
@@ -62,7 +62,7 @@ class XinxuProject(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': f'Orders — {self.name}',
+            'name': _('Orders — %s') % self.name,
             'res_model': 'sale.order',
             'view_mode': 'list,form',
             'domain': [('xinxu_project_id', '=', self.id)],
@@ -73,7 +73,7 @@ class XinxuProject(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': f'Tasks — {self.name}',
+            'name': _('Tasks — %s') % self.name,
             'res_model': 'project.task',
             'view_mode': 'list,form,kanban',
             'domain': [('project_id', '=', self.project_id.id)],

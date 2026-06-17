@@ -33,7 +33,8 @@
                             class="btn-primary"
                             invisible="project_id != False"/>
                     <field name="status" widget="statusbar"
-                           statusbar_visible="active,completed,cancelled"/>
+                           statusbar_visible="active,completed,cancelled"
+                           options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">

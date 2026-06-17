@@ -9,5 +9,6 @@ class SaleOrder(models.Model):
         'xinxu.project',
         string='XINXU Project',
         tracking=True,
-        help='Link this quotation/order to a XINXU commercial project.',
+        help='- Link this quotation/order to a XINXU commercial project. '
+             '- Associez ce devis/cette commande à un projet commercial XINXU.',
     )
