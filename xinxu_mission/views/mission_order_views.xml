@@ -46,35 +46,54 @@
         <field name="arch" type="xml">
             <form string="Ordre de mission">
                 <header>
+                    <!-- Soumettre : action réservée au propriétaire de la mission -->
                     <button name="action_submit" string="Soumettre" type="object"
-                            invisible="state != 'draft'" class="btn-primary"/>
+                            invisible="state != 'draft' or not is_mission_owner"
+                            class="btn-primary"/>
+                    <!-- Approuver : responsable, sur une mission qui n'est pas la sienne (sauf admin) -->
                     <button name="action_approve" string="Approuver" type="object"
                             groups="xinxu_mission.group_mission_manager"
-                            invisible="state != 'submitted' or employee_id.user_id == uid"
+                            invisible="state != 'submitted' or (is_mission_owner and not is_system_admin)"
                             class="btn-success"/>
+                    <!-- Refuser : responsable, sur une mission qui n'est pas la sienne (sauf admin) -->
                     <button name="action_refuse" string="Refuser" type="object"
                             groups="xinxu_mission.group_mission_manager"
-                            invisible="state != 'submitted' or employee_id.user_id == uid"
+                            invisible="state != 'submitted' or (is_mission_owner and not is_system_admin)"
                             class="btn-danger"/>
+                    <!-- Remettre en brouillon : action réservée au propriétaire de la mission -->
                     <button name="action_reset_to_draft" string="Remettre en brouillon" type="object"
-                            invisible="state != 'refused'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,refused" readonly="1"/>
+                            invisible="state != 'refused' or not is_mission_owner"/>
+                    <!-- Annuler l'approbation : responsable, sur une mission qui n'est pas la sienne (sauf admin) -->
+                    <button name="action_cancel_approval"
+                            string="Annuler l'approbation"
+                            type="object"
+                            groups="xinxu_mission.group_mission_manager"
+                            invisible="state != 'approved' or (is_mission_owner and not is_system_admin)"
+                            class="btn-warning"/>
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,submitted,approved,refused" readonly="1"/>
                 </header>
                 <sheet>
+                    <!-- Indicateurs de permission (calculés, masqués) -->
+                    <field name="is_mission_owner" invisible="1"/>
+                    <field name="is_mission_manager" invisible="1"/>
+                    <field name="is_system_admin" invisible="1"/>
+
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1"/>
                         </h1>
                         <group>
                             <group>
-                                <field name="employee_id" options="{'no_create': True}"/>
-                                <field name="function"/>
-                                <field name="personal_address"/>
-                                <field name="accompanied_by"/>
-                                <field name="particular_modalities"/>
+                                <field name="employee_id" options="{'no_create': True}"
+                                       readonly="state == 'approved'"/>
+                                <field name="function" readonly="state == 'approved'"/>
+                                <field name="personal_address" readonly="state == 'approved'"/>
+                                <field name="accompanied_by" readonly="state == 'approved'"/>
+                                <field name="particular_modalities" readonly="state == 'approved'"/>
                             </group>
                             <group>
-                                <field name="request_date"/>
+                                <field name="request_date" readonly="state == 'approved'"/>
                                 <field name="state" readonly="1"/>
                                 <field name="manager_id" readonly="1"/>
                                 <field name="approval_date" readonly="1"/>
@@ -85,7 +104,8 @@
                     <notebook>
                         <!-- Destinations -->
                         <page string="Destinations">
-                            <field name="stage_ids" mode="list,form">
+                            <field name="stage_ids" mode="list,form"
+                                   readonly="state == 'approved'">
                                 <list string="Étapes" editable="bottom">
                                     <field name="destination"/>
                                     <field name="departure_datetime"/>
@@ -110,15 +130,20 @@
                         <!-- Motif et transport -->
                         <page string="Motif et transport">
                             <group>
-                                <field name="purpose" widget="textarea"/>
-                                <field name="transport_mode"/>
+                                <field name="purpose" widget="textarea"
+                                       readonly="state == 'approved'"/>
+                                <field name="transport_mode"
+                                       readonly="state == 'approved'"/>
                                 <field name="vehicle_brand"
                                       invisible="transport_mode != 'personal_vehicle'"
-                                      required="transport_mode == 'personal_vehicle'"/>
+                                      required="transport_mode == 'personal_vehicle'"
+                                      readonly="state == 'approved'"/>
                                 <field name="vehicle_plate"
-                                      invisible="transport_mode != 'personal_vehicle'"/>
+                                      invisible="transport_mode != 'personal_vehicle'"
+                                      readonly="state == 'approved'"/>
                                 <field name="personal_vehicle_reimbursement"
-                                      invisible="transport_mode != 'personal_vehicle'"/>
+                                      invisible="transport_mode != 'personal_vehicle'"
+                                      readonly="state == 'approved'"/>
                             </group>
                         </page>
 
@@ -126,9 +151,12 @@
                         <page string="Budget">
                             <group>
                                 <group>
-                                    <field name="estimated_costs"/>
+                                    <field name="estimated_costs"
+                                           readonly="state == 'approved'"/>
+                                    <!-- Budget approuvé : visible par tous, modifiable uniquement
+                                         par un responsable et seulement à l'état « Soumis » -->
                                     <field name="approved_budget"
-                                           readonly="state not in ('submitted', 'approved')"/>
+                                           readonly="state != 'submitted' or not is_mission_manager"/>
                                 </group>
                                 <group>
                                     <field name="spent_amount"/>
@@ -159,10 +187,8 @@
                     </notebook>
                 </sheet>
 
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread"/>
-                </div>
+                <chatter/>
+
             </form>
         </field>
     </record>

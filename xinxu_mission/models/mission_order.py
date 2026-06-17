@@ -8,10 +8,6 @@ class MissionOrder(models.Model):
     _order = 'create_date desc'
 
     def _employee_id_domain(self):
-        """Managers: full list (subject to hr.employee.public rules). Mission users with a linked
-        HR card: only those employees. If none linked yet, no extra domain so the public directory
-        is searchable (same visibility as elsewhere in Odoo); mission record rules still apply.
-        """
         if self.env.user.has_group('xinxu_mission.group_mission_manager'):
             return []
         emps = self.env.user.employee_ids
@@ -71,10 +67,37 @@ class MissionOrder(models.Model):
     request_date = fields.Date(string='Date demande', default=fields.Date.today)
     approval_date = fields.Date(string="Date d'approbation", readonly=True)
 
+    is_mission_owner = fields.Boolean(
+        string="Ordre de mission personnel",
+        compute='_compute_user_flags',
+        help="Vrai si l'employé de la mission est lié à l'utilisateur courant.",
+    )
+    is_mission_manager = fields.Boolean(
+        string="Responsable de mission",
+        compute='_compute_user_flags',
+        help="Vrai si l'utilisateur courant appartient au groupe Responsable de mission.",
+    )
+    is_system_admin = fields.Boolean(
+        string="Administrateur système",
+        compute='_compute_user_flags',
+        help="Vrai si l'utilisateur courant est administrateur système.",
+    )
+
     total_restauration = fields.Monetary(string='Total Restauration', compute='_compute_expense_totals', store=True)
     total_transport = fields.Monetary(string='Total Transport', compute='_compute_expense_totals', store=True)
     total_divers = fields.Monetary(string='Total Frais divers', compute='_compute_expense_totals', store=True)
     total_expenses = fields.Monetary(string='Total', compute='_compute_expense_totals', store=True)
+
+    @api.depends('employee_id')
+    def _compute_user_flags(self):
+        user = self.env.user
+        is_manager = user.has_group('xinxu_mission.group_mission_manager')
+        is_admin = self.env.su or user.has_group('base.group_system')
+        user_emp_ids = user.employee_ids.ids
+        for mission in self:
+            mission.is_mission_manager = is_manager
+            mission.is_system_admin = is_admin
+            mission.is_mission_owner = bool(mission.employee_id) and mission.employee_id.id in user_emp_ids
 
     @api.depends('expense_ids', 'expense_ids.total_amount', 'expense_ids.product_id')
     def _compute_expense_totals(self):
@@ -105,25 +128,38 @@ class MissionOrder(models.Model):
             if mission.approved_budget < 0:
                 raise ValidationError(_("Le budget approuvé ne peut être négatif."))
 
+    def _is_system_admin(self):
+        """The DG / system administrator account is allowed to act on its own missions."""
+        return self.env.su or self.env.user.has_group('base.group_system')
+
+    def _check_mission_owner(self, mission, error_msg):
+        """Ensure the current user owns this mission (its employee is linked to the user).
+
+        Submitting and resetting to draft are OWNER-ONLY actions: managers are NOT
+        exempt (only the superuser is, for technical/backend operations).
+        """
+        if self.env.su:
+            return
+        if not self.env.user.employee_ids:
+            raise UserError(_(
+                "Aucun employé RH n'est lié à votre utilisateur. "
+                "Sur la fiche Employé, renseignez le champ « Utilisateur » avec ce compte, "
+                "puis réessayez."
+            ))
+        if mission.employee_id.id not in self.env.user.employee_ids.ids:
+            raise UserError(error_msg)
+
     def action_submit(self):
         for mission in self:
-            if not self.env.user.has_group('xinxu_mission.group_mission_manager'):
-                if not self.env.user.employee_ids:
-                    raise UserError(_(
-                        "Aucun employé RH n'est lié à votre utilisateur. "
-                        "Sur la fiche Employé, renseignez le champ « Utilisateur » avec ce compte, "
-                        "puis réessayez."
-                    ))
-                if mission.employee_id.id not in self.env.user.employee_ids.ids:
-                    raise UserError(_(
-                        "Le salarié sélectionné ne correspond pas à votre compte. "
-                        "Choisissez votre employé dans « Nom, Prénom » (ou demandez un administrateur si le champ est vide)."
-                    ))
+            self._check_mission_owner(mission, _(
+                "Vous ne pouvez soumettre que vos propres ordres de mission. "
+                "Choisissez votre employé dans « Nom, Prénom »."
+            ))
         self.write({'state': 'submitted'})
 
     def action_approve(self):
         for mission in self:
-            if mission.employee_id.user_id == self.env.user:
+            if mission.employee_id.user_id == self.env.user and not self._is_system_admin():
                 raise UserError(_("Vous ne pouvez pas approuver votre propre ordre de mission."))
         self.write({
             'state': 'approved',
@@ -134,15 +170,32 @@ class MissionOrder(models.Model):
 
     def action_refuse(self):
         for mission in self:
-            if mission.employee_id.user_id == self.env.user:
+            if mission.employee_id.user_id == self.env.user and not self._is_system_admin():
                 raise UserError(_("Vous ne pouvez pas refuser votre propre ordre de mission."))
         self.write({'state': 'refused'})
 
     def action_reset_to_draft(self):
+        for mission in self:
+            self._check_mission_owner(mission, _(
+                "Vous ne pouvez remettre en brouillon que vos propres ordres de mission."
+            ))
         self.write({'state': 'draft', 'manager_id': False, 'approval_date': False})
 
+    def action_cancel_approval(self):
+        for mission in self:
+            if mission.employee_id.user_id == self.env.user and not self._is_system_admin():
+                raise UserError(_(
+                    "Vous ne pouvez pas annuler l'approbation "
+                    "de votre propre ordre de mission."
+                ))
+        self.write({
+            'state': 'submitted',
+            'manager_id': False,
+            'approval_date': False,
+            'approved_budget': 0,
+        })
+
     def _check_mission_employee_for_user(self, employee_id):
-        """Mission users may only link orders to their own HR employee(s)."""
         if self.env.su or self.env.user.has_group('xinxu_mission.group_mission_manager'):
             return
         if not employee_id:
@@ -158,7 +211,7 @@ class MissionOrder(models.Model):
         if 'state' in vals:
             old_state = self.state
             new_state = vals['state']
-            res = super().write(vals) 
+            res = super().write(vals)
 
             for mission in self:
                 if old_state != new_state:
@@ -208,7 +261,7 @@ class MissionOrder(models.Model):
                 vals['function'] = employee.job_title or ''
             employee = self.env['hr.employee'].browse(vals.get('employee_id'))
             if employee and employee.user_id:
-                pass  
+                pass
         records = super().create(vals_list)
         for record in records:
             if record.employee_id and record.employee_id.user_id:
