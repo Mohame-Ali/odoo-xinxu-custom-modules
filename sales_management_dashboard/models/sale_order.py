@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, api, fields
+from odoo import models, api, fields, _
 from datetime import date, timedelta
 from odoo.exceptions import UserError
 
@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
 
         elif filter_key == 'custom' and custom_start and custom_end:
             if custom_end < custom_start:
-                raise UserError("Please select a valid range")
+                raise UserError(_("Please select a valid range"))
             return custom_start, custom_end
 
         return None, None
@@ -139,11 +139,11 @@ class SaleOrder(models.Model):
         order_domain = build_domain([], "order_filter")
         order_status_grouped = self.read_group(order_domain, ['id'], ['state'])
         ORDER_STATUS_LABELS = {
-            'draft': 'Quotation',
-            'sent': 'Quotation Sent',
-            'sale': 'Sales Order',
-            'done': 'Locked',
-            'cancel': 'Cancelled',
+            'draft': _('Quotation'),
+            'sent': _('Quotation Sent'),
+            'sale': _('Sales Order'),
+            'done': _('Locked'),
+            'cancel': _('Cancelled'),
         }
         order_status = [
             {'status': ORDER_STATUS_LABELS.get(rec['state'], rec['state'].capitalize()),
@@ -154,9 +154,9 @@ class SaleOrder(models.Model):
         invoice_domain = build_domain([('move_type', '=', 'out_invoice')], "invoice_filter", "invoice_date")
         invoice_status_grouped = self.env['account.move'].read_group(invoice_domain, ['id'], ['state'])
         INVOICE_STATUS_LABELS = {
-            'draft': 'Draft',
-            'posted': 'Posted',
-            'cancel': 'Cancelled',
+            'draft': _('Draft'),
+            'posted': _('Posted'),
+            'cancel': _('Cancelled'),
         }
         invoice_status = [
             {'status': INVOICE_STATUS_LABELS.get(rec['state'], rec['state'].capitalize()),
@@ -292,7 +292,7 @@ class SaleOrder(models.Model):
 
         new_vs_returning = {
             'summary': {
-                'labels': ["New Customers", "Returning Customers"],
+                'labels': [_("New Customers"), _("Returning Customers")],
                 'values': [len(new_customers), len(returning_customers)],
             },
             'details': {

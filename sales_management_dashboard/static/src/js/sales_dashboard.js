@@ -2,6 +2,7 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useState, onMounted } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 const actionRegistry = registry.category("actions");
 
@@ -65,7 +66,7 @@ class SalesDashboard extends Component {
         );
         this.actionService.doAction({
             type: "ir.actions.act_window",
-            name: "Sale Orders",
+            name: _t("Sale Orders"),
             res_model: "sale.order",
             domain,
             views: [[false, "list"], [false, "form"]]
@@ -84,7 +85,7 @@ class SalesDashboard extends Component {
         );
         this.actionService.doAction({
             type: "ir.actions.act_window",
-            name: "Quotations",
+            name: _t("Quotations"),
             res_model: "sale.order",
             domain,
             views: [[false, "list"], [false, "form"]]
@@ -103,7 +104,7 @@ class SalesDashboard extends Component {
         );
         this.actionService.doAction({
             type: "ir.actions.act_window",
-            name: "To Invoice",
+            name: _t("To Invoice"),
             res_model: "sale.order",
             domain,
             views: [[false, "list"], [false, "form"]]
@@ -122,7 +123,7 @@ class SalesDashboard extends Component {
         );
         this.actionService.doAction({
             type: "ir.actions.act_window",
-            name: "Fully Invoiced",
+            name: _t("Fully Invoiced"),
             res_model: "sale.order",
             domain,
             views: [[false, "list"], [false, "form"]]
