@@ -65,12 +65,9 @@
                            nolabel="1"
                            string="Tableau de Calcul — Client Local">
                         <list editable="bottom">
-                            <!-- Identification (keep column headers) -->
                             <field name="product_id" optional="show"/>
                             <field name="x_supplier_id" string="Fournisseur retenu" optional="show"/>
                             <field name="x_delivery_time" string="Délai" optional="show"/>
-
-                            <!-- Input fields – remove explicit string, model label will appear -->
                             <field name="x_supplier_price" optional="show"/>
                             <field name="x_customs_duties_pct" optional="show" widget="percentage"/>
                             <field name="x_conversion_rate" optional="show"/>
@@ -80,8 +77,6 @@
                             <field name="x_margin_pct" optional="show" widget="percentage"/>
                             <field name="x_tva_pct" optional="show" widget="percentage"/>
                             <field name="product_uom_qty" optional="show"/>
-
-                            <!-- Calculated fields – model labels will be used -->
                             <field name="x_total_price_orig" readonly="1" optional="show"/>
                             <field name="x_price_tnd" readonly="1" optional="show"/>
                             <field name="x_price_fodec" readonly="1" optional="show"/>
@@ -104,18 +99,13 @@
                            nolabel="1"
                            string="Tableau de Calcul — Client Étranger">
                         <list editable="bottom">
-                            <!-- Identification -->
                             <field name="product_id" optional="show"/>
                             <field name="x_supplier_id" string="Fournisseur retenu" optional="show"/>
                             <field name="x_delivery_time" string="Délai" optional="show"/>
-
-                            <!-- Input fields -->
                             <field name="x_supplier_price" optional="show"/>
                             <field name="x_conversion_rate" optional="show"/>
                             <field name="x_margin_pct" optional="show" widget="percentage"/>
                             <field name="product_uom_qty" optional="show"/>
-
-                            <!-- Calculated fields – model labels will be used -->
                             <field name="x_price_eur" readonly="1" optional="show"/>
                             <field name="x_unit_sell_price_eur" readonly="1" optional="show"/>
                             <field name="x_prix_total_eur" readonly="1" optional="show"/>

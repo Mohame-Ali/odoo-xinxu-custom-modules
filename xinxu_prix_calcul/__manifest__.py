@@ -5,22 +5,21 @@
     'summary': 'Calcul automatique du prix de vente sur les devis (Local TND / Étranger EUR) + création BC fournisseur',
     'description': """
         Flux réel XINXU :
-        ─────────────────
         DDP fournisseurs (Tableau Comparatif)
-              ↓
-        Devis client  ← Tableau de Calcul ici
-              ↓
+              vers
+        Devis client  (Tableau de Calcul ici)
+              vers
         Manager approuve
-              ↓
+              vers
         Proforma envoyée au client
-              ↓
-        Client accepte → Commande de vente
-              ↓
-        Bouton "Créer le BC fournisseur" → purchase.order
+              vers
+        Client accepte vers Commande de vente
+              vers
+        Bouton "Créer le BC fournisseur" vers purchase.order
 
         Deux tableaux de calcul sur sale.order.line :
-        • Client Local (TND)    : chaîne douanière complète (6 étapes)
-        • Client Étranger (EUR) : conversion + marge (2 étapes)
+        Client Local (TND) : chaîne douanière complète (6 étapes)
+        Client Étranger (EUR) : conversion + marge (2 étapes)
     """,
     'author': 'XINXU COMPANY',
     'category': 'Sales',
@@ -30,6 +29,12 @@
         'security/ir.model.access.csv',
         'views/sale_order_view.xml',
     ],
+    'assets': {
+        'web.assets_tests': [
+            'xinxu_prix_calcul/static/tests/tours/xinxu_prix_calcul_tour.js',
+            'xinxu_prix_calcul/static/tests/tours/xinxu_prix_calcul_tour_foreign.js',
+        ],
+    },    
     'installable': True,
     'application': False,
     'auto_install': False,

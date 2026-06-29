@@ -1,0 +1,289 @@
+# Translation of xinxu_prix_calcul (French)
+# This file contains the translation of the following modules:
+# 	* xinxu_prix_calcul
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order__xinxu_calc_type
+msgid "Calculation Type"
+msgstr "Type de calcul"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields.selection,name:xinxu_prix_calcul.selection__sale_order__xinxu_calc_type__local
+msgid "Local Customer"
+msgstr "Client Local"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields.selection,name:xinxu_prix_calcul.selection__sale_order__xinxu_calc_type__foreign
+msgid "Foreign Customer"
+msgstr "Client Étranger"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order__xinxu_delivery_mode
+msgid "Delivery Mode"
+msgstr "Mode de livraison"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order__xinxu_purchase_ids
+msgid "Supplier Purchase Orders"
+msgstr "Bons de commande fournisseur"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order__xinxu_purchase_count
+msgid "Supplier PO Count"
+msgstr "Nbre BC fournisseur"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_supplier_id
+msgid "Supplier"
+msgstr "Fournisseur"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_delivery_time
+msgid "Delivery Time"
+msgstr "Délai de livraison"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_supplier_price
+msgid "Supplier Price"
+msgstr "Prix fournisseur"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_conversion_rate
+msgid "Conversion Rate"
+msgstr "Taux de conversion"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_margin_pct
+msgid "Margin (%)"
+msgstr "Marge (%)"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_customs_duties_pct
+msgid "Customs Duties (%)"
+msgstr "Droits de douane (%)"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_fodec_pct
+msgid "FODEC (%)"
+msgstr "FODEC (%)"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_impot_douane_pct
+msgid "Customs Tax (%)"
+msgstr "Impôt douane (%)"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_avance_import_pct
+msgid "Import Advance (%)"
+msgstr "Avance sur Import (%)"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_tva_pct
+msgid "VAT (%)"
+msgstr "TVA (%)"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_total_price_orig
+msgid "Total Price (origin currency)"
+msgstr "Prix total (devise origine)"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_price_tnd
+msgid "Price After Conversion"
+msgstr "Prix après conversion"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_price_fodec
+msgid "Price + FODEC"
+msgstr "Prix + FODEC"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_price_all_taxes
+msgid "Price With Customs Tax"
+msgstr "Prix avec impôt douane"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_total_cost_tnd
+msgid "Total Cost"
+msgstr "Coût total"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_prix_htva
+msgid "Unit Price (excl. VAT)"
+msgstr "Prix unitaire HTVA"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_marge_unitaire
+msgid "Unit Margin (local)"
+msgstr "Marge unitaire (local)"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_montant_tva
+msgid "VAT Amount"
+msgstr "Montant TVA"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_prix_ttc
+msgid "Sale Price (incl. VAT)"
+msgstr "Prix de vente TTC"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_prix_total_ttc
+msgid "Total Price (incl. VAT)"
+msgstr "Prix total TTC"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_marge_total_local
+msgid "Total Margin (local)"
+msgstr "Marge totale (local)"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_price_eur
+msgid "Converted Cost"
+msgstr "Coût converti"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_unit_sell_price_eur
+msgid "Unit Sale Price (converted)"
+msgstr "Prix de vente unitaire (converti)"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_prix_total_eur
+msgid "Suggested Sale Price"
+msgstr "Prix de vente suggéré"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_margin_value_eur
+msgid "Unit Margin (foreign)"
+msgstr "Marge unitaire (étranger)"
+
+#. module: xinxu_prix_calcul
+#: model:ir.model.fields,field_description:xinxu_prix_calcul.field_sale_order_line__x_marge_total_eur
+msgid "Total Margin (foreign)"
+msgstr "Marge totale (étranger)"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Currency"
+msgstr "Devise"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Lead Time"
+msgstr "Délai"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Create Supplier PO"
+msgstr "Créer le BC Fournisseur"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Supplier PO(s)"
+msgstr "BC Fournisseur(s)"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "XINXU Info"
+msgstr "Infos XINXU"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Calculation Table"
+msgstr "Tableau de Calcul"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Calculation Table — Local Customer"
+msgstr "Tableau de Calcul — Client Local"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Calculation Table — Foreign Customer"
+msgstr "Tableau de Calcul — Client Étranger"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Calculation Detail — Local Customer"
+msgstr "Détail du calcul — Client Local"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Calculation Detail — Foreign Customer"
+msgstr "Détail du calcul — Client Étranger"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Product & Supplier"
+msgstr "Produit et fournisseur"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Calculation Parameters"
+msgstr "Paramètres de calcul"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Calculation Chain"
+msgstr "Chaîne de calcul"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Result"
+msgstr "Résultat"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Total incl. VAT"
+msgstr "Total TTC"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Total Margin"
+msgstr "Marge totale"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "Total"
+msgstr "Total"
+
+#. module: xinxu_prix_calcul
+#: code:addons/xinxu_prix_calcul/models/sale_order.py:0
+msgid ""
+"The supplier purchase order can only be created after the customer has "
+"confirmed the quotation."
+msgstr ""
+"Le bon de commande fournisseur ne peut être créé qu'après confirmation du "
+"devis par le client."
+
+#. module: xinxu_prix_calcul
+#: code:addons/xinxu_prix_calcul/models/sale_order.py:0
+msgid ""
+"No line has a supplier set.\n"
+"Please fill in the 'Supplier' field on each line in the Calculation Table tab."
+msgstr ""
+"Aucune ligne ne possède de fournisseur renseigné.\n"
+"Veuillez renseigner le champ 'Fournisseur' sur chaque ligne dans l'onglet "
+"Tableau de Calcul."
+
+#. module: xinxu_prix_calcul
+#: code:addons/xinxu_prix_calcul/models/sale_order.py:0
+msgid "Purchase order created automatically from quotation %s"
+msgstr "Bon de commande créé automatiquement depuis le devis %s"
+
+#. module: xinxu_prix_calcul
+#: model_terms:ir.ui.view,arch_db:xinxu_prix_calcul.view_sale_order_form_xinxu_calcul
+msgid "How to use: enter the supplier price, conversion rate and margin. The selling price is calculated and automatically written to the order lines. Click the expand icon at the end of a line to open the full calculation detail."
+msgstr "Mode d'emploi : saisissez le prix fournisseur, le taux de conversion et la marge. Le prix de vente est calculé et inscrit automatiquement dans les lignes de commande. Cliquez sur l'icône d'agrandissement en fin de ligne pour ouvrir le détail complet du calcul."

@@ -5,207 +5,157 @@ from odoo import api, fields, models
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # Fournisseur retenu + délai
-    # ─────────────────────────────────────────────────────────────────────────
-
     x_supplier_id = fields.Many2one(
         comodel_name='res.partner',
-        string='Fournisseur',
+        string='Supplier',
         domain=[('supplier_rank', '>=', 0)],
-        help="Fournisseur retenu après le Tableau Comparatif.",
+        help="Supplier selected after the comparison table.",
     )
-
     x_delivery_time = fields.Char(
-        string='Délai de livraison',
-        help="Délai indiqué par le fournisseur (ex : 2 Weeks, In Stock).",
+        string='Delivery Time',
+        help="Lead time given by the supplier (e.g. 2 Weeks, In Stock).",
     )
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # Prix fournisseur (séparé de price_unit)
-    # ─────────────────────────────────────────────────────────────────────────
-
     x_supplier_price = fields.Float(
-        string='Prix fournisseur',
+        string='Supplier Price',
         digits=(16, 4),
         default=0.0,
-        help="Prix d'achat fournisseur. "
-             "Le prix de vente calculé sera écrit automatiquement "
-             "dans le Prix Unitaire des Lignes de Commande.",
+        help="Supplier purchase price. The computed sale price is written "
+             "automatically into the order line Unit Price.",
     )
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # CHAMPS COMMUNS — saisie manuelle
-    # ─────────────────────────────────────────────────────────────────────────
-
     x_conversion_rate = fields.Float(
-        string='Taux de conversion',
+        string='Conversion Rate',
         digits=(16, 6),
         default=1.0,
-        help="Taux de conversion vers la devise du devis.\n"
-            "Exemples :\n"
-            "- Devis en TND : saisir 3.20 pour convertir USD → TND\n"
-            "- Devis en EUR : saisir 0.93 pour convertir USD → EUR\n"
-            "À saisir manuellement (ne pas utiliser le taux automatique).",
+        help="Conversion rate to the quotation currency. "
+             "To be entered manually (do not use the automatic rate).",
     )
-
     x_margin_pct = fields.Float(
-        string='Marge (%)',
+        string='Margin (%)',
         digits=(5, 4),
         default=0.10,
-        help="Pourcentage de marge commerciale.\n"
-             "LOCAL    : défaut 10 %  → saisir 0.10\n"
-             "ÉTRANGER : défaut 13 %  → saisir 0.13",
+        help="Commercial margin percentage. "
+             "Local default 10%, Foreign default 13%.",
     )
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # CHAMPS LOCAL — saisie manuelle
-    # ─────────────────────────────────────────────────────────────────────────
-
     x_customs_duties_pct = fields.Float(
-        string='Droits de douane (%)',
+        string='Customs Duties (%)',
         digits=(5, 4),
         default=0.01,
-        help="Droits de douane appliqués sur le prix fournisseur.\n"
-             "Défaut : 1 %  → saisir 0.01",
+        help="Customs duties applied on the supplier price. Default 1%.",
     )
-
     x_fodec_pct = fields.Float(
         string='FODEC (%)',
         digits=(5, 4),
         default=0.01,
-        help="Fonds de Développement de la Compétitivité.\n"
-             "Défaut : 1 %  → saisir 0.01",
+        help="Competitiveness Development Fund. Default 1%.",
     )
-
     x_impot_douane_pct = fields.Float(
-        string='Impôt douane (%)',
+        string='Customs Tax (%)',
         digits=(5, 4),
         default=0.30,
-        help="Impôt de douane tunisien.\n"
-             "Défaut : 30 %  → saisir 0.30",
+        help="Tunisian customs tax. Default 30%.",
     )
-
     x_avance_import_pct = fields.Float(
-        string='Avance sur Import (%)',
+        string='Import Advance (%)',
         digits=(5, 4),
         default=0.03,
-        help="Avance sur impôt à l'importation.\n"
-             "Défaut : 3 %  → saisir 0.03",
+        help="Advance on import tax. Default 3%.",
     )
-
     x_tva_pct = fields.Float(
-        string='TVA (%)',
+        string='VAT (%)',
         digits=(5, 4),
         default=0.19,
-        help="Taux de TVA tunisien.\n"
-             "Défaut : 19 %  → saisir 0.19",
+        help="Tunisian VAT rate. Default 19%.",
     )
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # CHAMPS CALCULÉS — TABLEAU LOCAL 
-    # ─────────────────────────────────────────────────────────────────────────
-
+    # Computed - local table
     x_total_price_orig = fields.Float(
-        string='Prix total (devise origine)',
+        string='Total Price (origin currency)',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="F = Prix fournisseur × (1 + Droits de douane %)",
+        help="Supplier price x (1 + Customs Duties %).",
     )
     x_price_tnd = fields.Float(
-        string='Prix après conversion',
+        string='Price After Conversion',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="I = Prix total devise × Taux de conversion ",
+        help="Total origin price x Conversion Rate.",
     )
     x_price_fodec = fields.Float(
-        string='Prix + FODEC',
+        string='Price + FODEC',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="K = Prix après conversion × (1 + FODEC %)",
+        help="Price after conversion x (1 + FODEC %).",
     )
     x_price_all_taxes = fields.Float(
-        string='Prix avec impôt douane',
+        string='Price With Customs Tax',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="M = Prix+FODEC × (1 + Impôt douane %)",
+        help="Price + FODEC x (1 + Customs Tax %).",
     )
     x_total_cost_tnd = fields.Float(
-        string='Coût total ',
+        string='Total Cost',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="O = Prix toutes taxes × (1 + Avance sur Import %)",
+        help="Price with all taxes x (1 + Import Advance %).",
     )
     x_prix_htva = fields.Float(
-        string='Prix unitaire HTVA',
+        string='Unit Price (excl. VAT)',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="Q = Coût total ÷ (1 − Marge %)",
+        help="Total cost / (1 - Margin %).",
     )
     x_marge_unitaire = fields.Float(
-        string='Marge unitaire (local)',
+        string='Unit Margin (local)',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="R = Prix HTVA − Coût total ",
+        help="Unit Price (excl. VAT) - Total cost.",
     )
     x_montant_tva = fields.Float(
-        string='Montant TVA',
+        string='VAT Amount',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="T = Prix HTVA × TVA %",
+        help="Unit Price (excl. VAT) x VAT %.",
     )
     x_prix_ttc = fields.Float(
-        string='Prix de vente TTC',
+        string='Sale Price (incl. VAT)',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="U = Prix HTVA + Montant TVA → PRIX DE VENTE CLIENT",
+        help="Unit Price (excl. VAT) + VAT Amount -> CUSTOMER SALE PRICE.",
     )
     x_prix_total_ttc = fields.Float(
-        string='Prix total TTC',
+        string='Total Price (incl. VAT)',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="W = Prix TTC × Quantité",
+        help="Sale Price (incl. VAT) x Quantity.",
     )
     x_marge_total_local = fields.Float(
-        string='Marge totale (local)',
+        string='Total Margin (local)',
         compute='_compute_local', store=True, digits=(16, 4),
-        help="X = Marge unitaire × Quantité",
+        help="Unit margin x Quantity.",
     )
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # CHAMPS CALCULÉS — TABLEAU ÉTRANGER 
-    # ─────────────────────────────────────────────────────────────────────────
-
+    # Computed - foreign table
     x_price_eur = fields.Float(
-        string='Coût converti',
+        string='Converted Cost',
         compute='_compute_foreign', store=True, digits=(16, 4),
-        help="Prix fournisseur converti dans la devise du devis.",
+        help="Supplier price converted into the quotation currency.",
     )
     x_unit_sell_price_eur = fields.Float(
-        string='Prix de vente unitaire (converti)',
+        string='Unit Sale Price (converted)',
         compute='_compute_foreign', store=True, digits=(16, 4),
-        help="Prix de vente unitaire proposé au client (coût converti ÷ (1 − Marge %)).",
+        help="Unit sale price offered to the customer "
+             "(converted cost / (1 - Margin %)).",
     )
     x_prix_total_eur = fields.Float(
-        string='Prix de vente suggéré ',
+        string='Suggested Sale Price',
         compute='_compute_foreign', store=True, digits=(16, 4),
-        help="Montant total de la ligne = Quantité × Prix de vente suggéré.",
+        help="Line total = Quantity x suggested unit sale price.",
     )
     x_margin_value_eur = fields.Float(
-        string='Marge unitaire (étranger) ',
+        string='Unit Margin (foreign)',
         compute='_compute_foreign', store=True, digits=(16, 4),
-        help="Marge par unité = Prix de vente suggéré − Coût converti.",
+        help="Margin per unit = suggested sale price - converted cost.",
     )
     x_marge_total_eur = fields.Float(
-        string='Marge totale (étranger)',
+        string='Total Margin (foreign)',
         compute='_compute_foreign', store=True, digits=(16, 4),
-        help="Marge totale = Marge unitaire × Quantité.",
+        help="Total margin = unit margin x Quantity.",
     )
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # COMPUTE — TABLEAU LOCAL
-    # ─────────────────────────────────────────────────────────────────────────
-
     @api.depends(
-        'x_supplier_price',
-        'product_uom_qty',
-        'x_customs_duties_pct',
-        'x_conversion_rate',
-        'x_fodec_pct',
-        'x_impot_douane_pct',
-        'x_avance_import_pct',
-        'x_margin_pct',
-        'x_tva_pct',
+        'x_supplier_price', 'product_uom_qty', 'x_customs_duties_pct',
+        'x_conversion_rate', 'x_fodec_pct', 'x_impot_douane_pct',
+        'x_avance_import_pct', 'x_margin_pct', 'x_tva_pct',
         'order_id.xinxu_calc_type',
     )
     def _compute_local(self):
@@ -236,20 +186,12 @@ class SaleOrderLine(models.Model):
             line.x_prix_total_ttc    = w
             line.x_marge_total_local = x
 
-            # Écrire le prix de vente TTC dans price_unit — DANS la boucle for
             if line.order_id.xinxu_calc_type == 'local':
                 line.price_unit = u
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # COMPUTE — TABLEAU ÉTRANGER
-    # ─────────────────────────────────────────────────────────────────────────
-
     @api.depends(
-        'x_supplier_price',
-        'product_uom_qty',
-        'x_conversion_rate',
-        'x_margin_pct',
-        'order_id.xinxu_calc_type',
+        'x_supplier_price', 'product_uom_qty', 'x_conversion_rate',
+        'x_margin_pct', 'order_id.xinxu_calc_type',
     )
     def _compute_foreign(self):
         for line in self:
@@ -267,6 +209,5 @@ class SaleOrderLine(models.Model):
             line.x_margin_value_eur    = o
             line.x_marge_total_eur     = p
 
-            # Écrire le prix de vente EUR dans price_unit — DANS la boucle for  
             if line.order_id.xinxu_calc_type == 'foreign':
                 line.price_unit = m

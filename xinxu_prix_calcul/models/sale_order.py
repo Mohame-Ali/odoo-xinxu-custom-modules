@@ -6,44 +6,37 @@ from odoo.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # Champ : type de tableau de calcul
-    # ─────────────────────────────────────────────────────────────────────────
-
     xinxu_calc_type = fields.Selection(
         selection=[
-            ('local',   'Client Local '),
-            ('foreign', 'Client Étranger '),
+            ('local',   'Local Customer'),
+            ('foreign', 'Foreign Customer'),
         ],
-        string='Type de calcul',
+        string='Calculation Type',
         default='local',
         required=True,
-        help="Détermine le tableau de calcul utilisé sur les lignes :\n"
-             "• Local    → conversion + chaîne douanière (6 étapes)\n"
-             "• Étranger → conversion + marge (2 étapes)",
+        help="Determines the calculation table used on the lines:\n"
+             "- Local   -> conversion + customs chain (6 steps)\n"
+             "- Foreign -> conversion + margin (2 steps)",
     )
-    # ─────────────────────────────────────────────────────────────────────────
-    # Champ : mode de livraison 
-    # ─────────────────────────────────────────────────────────────────────────
 
     xinxu_delivery_mode = fields.Char(
-        string='Mode de livraison',
+        string='Delivery Mode',
         default='Rendu usine',
-        help="Mode de livraison.",
+        help="Delivery mode.",
     )
-    # Lien vers le(s) BC fournisseur(s) créé(s) depuis ce devis
+
     xinxu_purchase_ids = fields.Many2many(
         comodel_name='purchase.order',
         relation='xinxu_sale_purchase_rel',
         column1='sale_id',
         column2='purchase_id',
-        string='Bons de commande fournisseur',
+        string='Supplier Purchase Orders',
         copy=False,
     )
 
     xinxu_purchase_count = fields.Integer(
         compute='_compute_xinxu_purchase_count',
-        string='Nbre BC fournisseur',
+        string='Supplier PO Count',
     )
 
     @api.depends('xinxu_purchase_ids')
@@ -51,44 +44,27 @@ class SaleOrder(models.Model):
         for order in self:
             order.xinxu_purchase_count = len(order.xinxu_purchase_ids)
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # Bouton : créer le BC fournisseur depuis la commande de vente confirmée
-    # ─────────────────────────────────────────────────────────────────────────
-
     def action_xinxu_create_purchase_order(self):
-        """
-        Crée un purchase.order depuis la commande de vente confirmée.
-
-        Règles :
-        - Toutes les lignes doivent avoir un fournisseur renseigné
-          (x_supplier_id).
-        - Un seul BC est créé par fournisseur (lignes regroupées).
-        - Prix unitaire du BC = prix fournisseur saisi dans le
-          Tableau de Calcul (price_unit de la ligne de vente, qui
-          représente le prix fournisseur avant calcul de marge).
-        - Le BC est créé en brouillon pour permettre une vérification
-          avant envoi.
-        """
+        """Create a purchase.order from the confirmed sale order."""
         self.ensure_one()
 
         if self.state not in ('sale', 'done'):
-            raise UserError(
-                "Le bon de commande fournisseur ne peut être créé "
-                "qu'après confirmation du devis par le client."
-            )
+            raise UserError(_(
+                "The supplier purchase order can only be created "
+                "after the customer has confirmed the quotation."
+            ))
 
         lines_with_supplier = self.order_line.filtered(
             lambda l: l.x_supplier_id and not l.display_type
         )
 
         if not lines_with_supplier:
-            raise UserError(
-                "Aucune ligne ne possède de fournisseur renseigné.\n"
-                "Veuillez renseigner le champ 'Fournisseur' sur chaque "
-                "ligne dans l'onglet Tableau de Calcul."
-            )
+            raise UserError(_(
+                "No line has a supplier set.\n"
+                "Please fill in the 'Supplier' field on each line "
+                "in the Calculation Table tab."
+            ))
 
-        # Regrouper les lignes par fournisseur
         suppliers = lines_with_supplier.mapped('x_supplier_id')
         created_pos = self.env['purchase.order']
 
@@ -100,29 +76,26 @@ class SaleOrder(models.Model):
             po_lines = []
             for sl in supplier_lines:
                 po_lines.append((0, 0, {
-                    'product_id':      sl.product_id.id,    
-                    'name':            sl.name,
-                    'product_qty':     sl.product_uom_qty,
-                    'product_uom':     sl.product_uom.id,
-                     # Prix fournisseur = prix d'achat saisi dans le Tableau de Calcul
-                    'price_unit':      sl.x_supplier_price,
-                    'date_planned':    fields.Datetime.now(),
+                    'product_id':   sl.product_id.id,
+                    'name':         sl.name,
+                    'product_qty':  sl.product_uom_qty,
+                    'product_uom':  sl.product_uom.id,
+                    'price_unit':   sl.x_supplier_price,
+                    'date_planned': fields.Datetime.now(),
                 }))
 
             po = self.env['purchase.order'].create({
-                'partner_id':  supplier.id,
-                'origin':      self.name,
-                'order_line':  po_lines,
-                'notes':       _(
-                    "Bon de commande créé automatiquement depuis le devis %s"
+                'partner_id': supplier.id,
+                'origin':     self.name,
+                'order_line': po_lines,
+                'notes':      _(
+                    "Purchase order created automatically from quotation %s"
                 ) % self.name,
             })
             created_pos |= po
 
-        # Lier les BC créés à ce devis
         self.xinxu_purchase_ids |= created_pos
 
-        # Ouvrir la liste des BC créés
         if len(created_pos) == 1:
             return {
                 'type':      'ir.actions.act_window',
@@ -140,7 +113,7 @@ class SaleOrder(models.Model):
         }
 
     def action_view_xinxu_purchases(self):
-        """Bouton smart : voir les BC fournisseurs liés."""
+        """Smart button: view linked supplier purchase orders."""
         self.ensure_one()
         return {
             'type':      'ir.actions.act_window',
@@ -149,9 +122,6 @@ class SaleOrder(models.Model):
             'domain':    [('id', 'in', self.xinxu_purchase_ids.ids)],
             'target':    'current',
         }
-    # ─────────────────────────────────────────────────────────────────────────
-    # Copie du mode de livraison vers la facture
-    # ─────────────────────────────────────────────────────────────────────────
 
     def _prepare_invoice(self):
         """Override to copy the delivery mode from the sale order to the invoice."""
