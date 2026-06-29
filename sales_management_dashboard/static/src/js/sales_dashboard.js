@@ -147,6 +147,7 @@ class SalesDashboard extends Component {
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: { legend: { position: 'bottom' } }
                 }
             });
@@ -163,6 +164,7 @@ class SalesDashboard extends Component {
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: { y: { beginAtZero: true } },
                     plugins: { legend: { display: false } }
                 }

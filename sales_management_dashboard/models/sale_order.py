@@ -54,10 +54,41 @@ class SaleOrder(models.Model):
     def get_tile_domain(self, base_domain, filters):
         return self._build_global_domain(base_domain, filters)
 
+    def _aggregate_amounts_by(self, model, domain, dimension, limit,
+                              company_currency, conv_date, amount_field='amount_total'):
+        """Regroupe les enregistrements de `model` par `dimension` ET par devise,
+        convertit chaque montant dans la devise de la societe avant agregation,
+        afin que les chiffres multi-devises soient comparables. Renvoie les
+        `limit` premieres entrees triees sur le montant converti, chacune avec
+        un `amount` numerique (pour les graphiques) et un `amount_display`
+        formate (pour les tableaux)."""
+        groups = self.env[model].read_group(
+            domain, [amount_field], [dimension, 'currency_id'], lazy=False,
+        )
+        totals = {}
+        for g in groups:
+            dim = g.get(dimension)
+            if not dim:
+                continue
+            rec_id, rec_name = dim[0], dim[1]
+            amount = g.get(amount_field) or 0.0
+            currency = g.get('currency_id')
+            if currency and currency[0] != company_currency.id:
+                amount = self.env['res.currency'].browse(currency[0])._convert(
+                    amount, company_currency, self.env.company, conv_date)
+            entry = totals.setdefault(rec_id, {'id': rec_id, 'name': rec_name, 'amount': 0.0})
+            entry['amount'] += amount
+        rows = sorted(totals.values(), key=lambda r: r['amount'], reverse=True)[:limit]
+        for r in rows:
+            r['amount_display'] = company_currency.format(r['amount'])
+        return rows
+
     @api.model
     def get_sales_dashboard_data(self, filters=None):
         filters = filters or {}
         limit = int(filters.get("limit", 10))
+        company_currency = self.env.company.currency_id
+        conv_date = fields.Date.today()
 
         def get_filter_key(specific_filter_key):
             global_filter = filters.get("global_filter", "this_week")
@@ -89,26 +120,16 @@ class SaleOrder(models.Model):
             return domain
 
         team_domain = build_domain([('state', 'in', ['sale', 'done'])], "team_filter")
-        sales_by_team = self.read_group(team_domain, ['amount_total'], ['team_id'], limit=limit, orderby='amount_total desc')
-        teams = [
-            {'id': rec['team_id'][0], 'name': rec['team_id'][1], 'amount': rec['amount_total']}
-            for rec in sales_by_team if rec['team_id']
-        ]
+        teams = self._aggregate_amounts_by('sale.order', team_domain, 'team_id',
+                                           limit, company_currency, conv_date)
 
         person_domain = build_domain([('state', 'in', ['sale', 'done'])], "person_filter")
-        sales_by_person = self.read_group(person_domain, ['amount_total'], ['user_id'], limit=limit, orderby='amount_total desc')
-        persons = [
-            {'id': rec['user_id'][0], 'name': rec['user_id'][1], 'amount': rec['amount_total']}
-            for rec in sales_by_person if rec['user_id']
-        ]
+        persons = self._aggregate_amounts_by('sale.order', person_domain, 'user_id',
+                                             limit, company_currency, conv_date)
 
         customer_domain = build_domain([('state', 'in', ['sale', 'done'])], "customer_filter")
-        customers_grouped = self.read_group(customer_domain, ['amount_total'], ['partner_id'],
-                                            limit=limit, orderby='amount_total desc')
-        customers = [
-            {'id': rec['partner_id'][0], 'name': rec['partner_id'][1], 'amount': rec['amount_total']}
-            for rec in customers_grouped if rec['partner_id']
-        ]
+        customers = self._aggregate_amounts_by('sale.order', customer_domain, 'partner_id',
+                                               limit, company_currency, conv_date)
 
         product_domain = build_domain([('order_id.state', 'in', ['sale', 'done'])],
                                       "product_filter", "order_id.date_order")
@@ -169,13 +190,9 @@ class SaleOrder(models.Model):
             ('payment_state', '!=', 'paid'),
             ('invoice_date_due', '<', fields.Date.today())
         ], "overdue_filter", "invoice_date")
-        overdue_customers_grouped = self.env['account.move'].read_group(
-            overdue_customers_domain, ['amount_total'], ['partner_id'], orderby='amount_total desc', limit=limit
-        )
-        overdue_customers = [
-            {'id': rec['partner_id'][0], 'name': rec['partner_id'][1], 'amount': rec['amount_total']}
-            for rec in overdue_customers_grouped if rec['partner_id']
-        ]
+        overdue_customers = self._aggregate_amounts_by(
+            'account.move', overdue_customers_domain, 'partner_id',
+            limit, company_currency, conv_date)
 
         categories = self.env['product.category'].search([])
         product_categories = [{'id': c.id, 'name': c.display_name} for c in categories]

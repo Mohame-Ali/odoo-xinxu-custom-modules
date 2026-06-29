@@ -375,3 +375,27 @@ msgstr "Tableau de bord"
 #: model:ir.ui.menu,name:sales_management_dashboard.menu_sales_dashboard_root
 msgid "Sales Dashboard"
 msgstr "Tableau de bord des ventes"
+
+#. module: sales_management_dashboard
+#. odoo-javascript
+#: code:addons/sales_management_dashboard/static/src/xml/sales_dashboard.xml:0
+msgid "Sales Pipeline"
+msgstr "Cycle de vente"
+
+#. module: sales_management_dashboard
+#. odoo-javascript
+#: code:addons/sales_management_dashboard/static/src/xml/sales_dashboard.xml:0
+msgid "Financial Indicators"
+msgstr "Indicateurs financiers"
+
+#. module: sales_management_dashboard
+#. odoo-javascript
+#: code:addons/sales_management_dashboard/static/src/xml/sales_dashboard.xml:0
+msgid "From:"
+msgstr "Du :"
+
+#. module: sales_management_dashboard
+#. odoo-javascript
+#: code:addons/sales_management_dashboard/static/src/xml/sales_dashboard.xml:0
+msgid "To:"
+msgstr "Au :"

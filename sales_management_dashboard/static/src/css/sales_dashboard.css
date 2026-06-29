@@ -1,0 +1,171 @@
+/* ============================================================
+   Sales Dashboard - feuille de style
+   Refonte ergonomique : tuiles d'indicateurs lisibles,
+   palette de couleurs porteuse de sens, en-tetes harmonises.
+   ============================================================ */
+
+/* ---- Conteneur general ---- */
+.o_sales_dashboard {
+    background-color: #f4f6fa;
+}
+
+/* ---- Titre principal ---- */
+.o_sales_dashboard .dashboard-title {
+    font-weight: 700;
+    color: #1e293b;
+    background: #ffffff;
+    border: 1px solid #e5e9f0;
+    border-radius: 12px;
+    padding: 14px 20px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+/* ---- Barre de filtres ---- */
+.o_sales_dashboard .kpi-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+    background: #ffffff;
+    border: 1px solid #e5e9f0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+.o_sales_dashboard .kpi-toolbar .toolbar-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.o_sales_dashboard .kpi-toolbar label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin: 0;
+}
+.o_sales_dashboard .kpi-toolbar select,
+.o_sales_dashboard .kpi-toolbar input[type="date"] {
+    min-width: 180px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 10px;
+    background: #fff;
+}
+
+/* ---- Etiquette de groupe au-dessus de chaque rangee de tuiles ---- */
+.o_sales_dashboard .kpi-group-label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin: 0 0 0.6rem 0.25rem;
+}
+
+/* ---- Tuile d'indicateur ---- */
+.o_sales_dashboard .kpi-card {
+    background: #ffffff;
+    border: 1px solid #e5e9f0;
+    border-left: 5px solid var(--kpi-accent, #2563eb);
+    border-radius: 12px;
+    padding: 16px 18px;
+    min-height: 100px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.o_sales_dashboard .kpi-card.is-clickable {
+    cursor: pointer;
+}
+.o_sales_dashboard .kpi-card.is-clickable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+}
+
+/* Pastille d'icone */
+.o_sales_dashboard .kpi-icon {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--kpi-soft, rgba(37, 99, 235, 0.12));
+    color: var(--kpi-accent, #2563eb);
+}
+.o_sales_dashboard .kpi-icon i {
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* Zone texte (libelle + valeur) */
+.o_sales_dashboard .kpi-text {
+    min-width: 0;
+}
+.o_sales_dashboard .kpi-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #475569;
+    line-height: 1.2;
+    margin-bottom: 4px;
+}
+.o_sales_dashboard .kpi-value {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.15;
+    word-break: break-word;
+}
+
+/* ---- Familles de couleurs porteuses de sens ----
+   Rangee 1 (cycle de vente) : statuts du plus precoce au plus avance.
+   Rangee 2 (indicateurs financiers) : famille froide distincte. */
+.o_sales_dashboard .kpi--slate  { --kpi-accent: #64748b; --kpi-soft: rgba(100, 116, 139, 0.12); }
+.o_sales_dashboard .kpi--blue   { --kpi-accent: #2563eb; --kpi-soft: rgba(37, 99, 235, 0.12); }
+.o_sales_dashboard .kpi--amber  { --kpi-accent: #d97706; --kpi-soft: rgba(217, 119, 6, 0.14); }
+.o_sales_dashboard .kpi--green  { --kpi-accent: #16a34a; --kpi-soft: rgba(22, 163, 74, 0.13); }
+.o_sales_dashboard .kpi--indigo { --kpi-accent: #6366f1; --kpi-soft: rgba(99, 102, 241, 0.13); }
+.o_sales_dashboard .kpi--teal   { --kpi-accent: #0d9488; --kpi-soft: rgba(13, 148, 136, 0.13); }
+.o_sales_dashboard .kpi--navy   { --kpi-accent: #1e40af; --kpi-soft: rgba(30, 64, 175, 0.12); }
+.o_sales_dashboard .kpi--cyan   { --kpi-accent: #0891b2; --kpi-soft: rgba(8, 145, 178, 0.13); }
+
+/* ---- En-tetes de cartes (graphiques / tableaux) ---- */
+.o_sales_dashboard .dash-head {
+    background: #1e293b;
+    color: #ffffff;
+    font-weight: 600;
+    border-top-left-radius: 0.6rem;
+    border-top-right-radius: 0.6rem;
+}
+.o_sales_dashboard .dash-head--good { background: #15803d; }  /* meilleurs : vert */
+.o_sales_dashboard .dash-head--bad  { background: #b91c1c; }  /* moins bons / risque : rouge */
+
+/* ---- Cartes ---- */
+.o_sales_dashboard .card {
+    border: 1px solid #e5e9f0;
+    border-radius: 0.6rem;
+}
+
+/* ---- Zone graphique : hauteur maitrisee (corrige le canvas 789px) ---- */
+.o_sales_dashboard .chart-box {
+    position: relative;
+    height: 260px;
+    width: 100%;
+}
+.o_sales_dashboard .chart-box canvas {
+    cursor: pointer;
+}
+
+/* ---- Lignes de tableau cliquables ---- */
+.o_sales_dashboard .clickable-row {
+    cursor: pointer;
+}
+.o_sales_dashboard .clickable-row:hover {
+    background-color: #eef2ff;
+}

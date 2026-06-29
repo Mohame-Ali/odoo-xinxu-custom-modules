@@ -18,6 +18,7 @@
     ],
     'assets': {
         'web.assets_backend': [
+            'sales_management_dashboard/static/src/css/sales_dashboard.css',
             'sales_management_dashboard/static/src/js/sales_dashboard.js',
             'sales_management_dashboard/static/src/xml/sales_dashboard.xml',
             'https://cdn.jsdelivr.net/npm/chart.js',
