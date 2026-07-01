@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <!-- Insert the XINXU logo at the top of the apps home menu,
+         just above the search bar, keeping the existing layout. -->
+    <t t-inherit="web_responsive.AppsMenu" t-inherit-mode="extension">
+        <xpath expr="//t[@t-slot='search_bar']" position="before">
+            <div class="xinxu_appmenu_logo">
+                <img
+                    src="/xinxu_branding/static/src/img/xinxu_logo.png"
+                    alt="XINXU Group"
+                    title="XINXU"
+                />
+            </div>
+        </xpath>
+    </t>
+</templates>

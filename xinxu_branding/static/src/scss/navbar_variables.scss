@@ -1,0 +1,6 @@
+// XINXU navbar color.
+// Set through Odoo's documented primary-variables bundle so the WHOLE navbar
+// (apps toggle, in-app menu sections, systray) is recolored consistently,
+// instead of forcing only the container with !important.
+$o-navbar-background: #1c2331;
+$o-navbar-border-bottom: 1px solid #12161f;

@@ -1,0 +1,17 @@
+.app-menu-container {
+    .xinxu_appmenu_logo {
+        flex: 0 0 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.5rem;
+        margin-bottom: 0.25rem;
+
+        img {
+            max-height: 76px;
+            max-width: 340px;
+            width: auto;
+            height: auto;
+        }
+    }
+}

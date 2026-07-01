@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Force the XINXU favicon on every backend/login page, regardless of
+         whether the Company form exposes a Favicon field in this build. -->
+    <template id="xinxu_favicon" inherit_id="web.layout" name="XINXU Favicon">
+        <xpath expr="//link[@rel='shortcut icon']" position="attributes">
+            <attribute name="t-att-href">'/xinxu_branding/static/src/img/xinxu_favicon.png?v=2'</attribute>
+            <attribute name="type">image/png</attribute>
+        </xpath>
+    </template>
+</odoo>
