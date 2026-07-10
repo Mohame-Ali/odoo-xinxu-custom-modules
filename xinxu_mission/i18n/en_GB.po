@@ -1,0 +1,1301 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* xinxu_mission
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-10 10:10+0000\n"
+"PO-Revision-Date: 2026-07-10 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"%(count)s note(s) de frais détachée(s) suite à l'annulation de "
+"l'approbation."
+msgstr ""
+"%(count)s expense entry(ies) detached following the cancellation of the "
+"approval."
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_hr_employee_form_mission_button
+msgid "<span class=\"o_stat_text\">Missions</span>"
+msgstr "<span class=\"o_stat_text\">Missions</span>"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "<strong>ACCOMPAGNÉ DE :</strong>"
+msgstr "<strong>ACCOMPANIED BY:</strong>"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "<strong>FONCTIONS :</strong>"
+msgstr "<strong>FUNCTION:</strong>"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "<strong>MODALITÉS PARTICULIERES :</strong>"
+msgstr "<strong>SPECIAL CONDITIONS:</strong>"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "<strong>MOTIF DU DEPLACEMENT :</strong>"
+msgstr "<strong>PURPOSE OF TRAVEL:</strong>"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "<strong>MOYEN DE TRANSPORT :</strong>"
+msgstr "<strong>MEANS OF TRANSPORT:</strong>"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "<strong>NOM, Prénom :</strong>"
+msgstr "<strong>NAME, First name:</strong>"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "<strong>RESIDENCE PERSONNELLE :</strong>"
+msgstr "<strong>PERSONAL RESIDENCE:</strong>"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__accompanied_by
+msgid "Accompagné de"
+msgstr "Accompanied by"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__message_needaction
+msgid "Action Needed"
+msgstr "Action Needed"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__activity_ids
+msgid "Activities"
+msgstr "Activities"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Activity Exception Decoration"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__activity_state
+msgid "Activity State"
+msgstr "Activity State"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Activity Type Icon"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__is_system_admin
+msgid "Administrateur système"
+msgstr "System administrator"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Annuler l'approbation"
+msgstr "Cancel approval"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Approuver"
+msgstr "Approve"
+
+#. module: xinxu_mission
+#: model:ir.model.fields.selection,name:xinxu_mission.selection__mission_order__state__approved
+msgid "Approuvé"
+msgstr "Approved"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__message_attachment_count
+msgid "Attachment Count"
+msgstr "Attachment Count"
+
+#. module: xinxu_mission
+#: model_terms:ir.actions.act_window,help:xinxu_mission.action_employee_mission_budget_manager
+msgid "Aucun collaborateur trouvé."
+msgstr "No employee found."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"Aucun employé RH n'est lié à votre utilisateur. Sur la fiche Employé, "
+"renseignez le champ « Utilisateur » avec ce compte, puis réessayez."
+msgstr ""
+"No HR employee is linked to your user account. On the Employee record, set "
+"the “User” field to this account, then try again."
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_search
+msgid "Avec missions approuvées"
+msgstr "With approved missions"
+
+#. module: xinxu_mission
+#: model:ir.model.fields.selection,name:xinxu_mission.selection__mission_order__state__draft
+msgid "Brouillon"
+msgstr "Draft"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Budget"
+msgstr "Budget"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Budget Missions (missions approuvées)"
+msgstr "Mission Budget (approved missions)"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_list
+msgid "Budget Missions par Collaborateur"
+msgstr "Mission Budget by Employee"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Budget Missions — Collaborateur"
+msgstr "Mission Budget — Employee"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__approved_budget
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_list
+msgid "Budget approuvé"
+msgstr "Approved budget"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_hr_employee_public__mission_total_approved_budget
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Budget approuvé total"
+msgstr "Total approved budget"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_hr_employee_public__mission_total_remaining
+msgid "Budget approuvé total − Total dépensé."
+msgstr "Total approved budget minus total spent."
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_search
+msgid "Budget dépassé"
+msgstr "Budget exceeded"
+
+#. module: xinxu_mission
+#: model:ir.actions.act_window,name:xinxu_mission.action_employee_mission_budget_manager
+#: model:ir.ui.menu,name:xinxu_mission.menu_employee_mission_budget_manager
+msgid "Budget par Collaborateur"
+msgstr "Budget by Employee"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_list
+msgid "Budget total"
+msgstr "Total budget"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__approved_budget
+msgid ""
+"Budget validé par le responsable de mission chargé d'approuver la demande "
+"(et non par l'employé demandeur) ; sert de référence pour le suivi des "
+"dépenses réelles. Modifiable uniquement par ce responsable, et seulement "
+"tant que la mission est à l'état « Soumis »."
+msgstr ""
+"Budget validated by the mission manager responsible for approving the "
+"request (not by the requesting employee); used as the reference for tracking"
+" actual expenses. Editable only by that manager, and only while the mission "
+"is in the “Submitted” state."
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_search
+msgid "Budget épuisé"
+msgstr "Budget exhausted"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_product_product__expense_category
+#: model:ir.model.fields,field_description:xinxu_mission.field_product_template__expense_category
+msgid "Catégorie de frais mission"
+msgstr "Mission expense category"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_product_product__expense_category
+#: model:ir.model.fields,help:xinxu_mission.field_product_template__expense_category
+msgid ""
+"Catégorie utilisée pour ventiler les dépenses liées aux ordres de mission "
+"(totaux Restauration / Transport / Frais divers)."
+msgstr ""
+"Category used to break down expenses linked to mission orders (Meals / "
+"Transport / Miscellaneous expenses totals)."
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_list
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_search
+msgid "Collaborateur"
+msgstr "Employee"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__particular_modalities
+msgid ""
+"Conditions ou dispositions particulières applicables à cette mission "
+"(hébergement spécifique, contraintes horaires, etc.)."
+msgstr ""
+"Any special conditions or arrangements applicable to this mission (specific "
+"accommodation, schedule constraints, etc.)."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__estimated_costs
+msgid "Coûts estimés"
+msgstr "Estimated costs"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__create_uid
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_stage__create_uid
+msgid "Created by"
+msgstr "Created by"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__create_date
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_stage__create_date
+msgid "Created on"
+msgstr "Created on"
+
+#. module: xinxu_mission
+#: model_terms:ir.actions.act_window,help:xinxu_mission.action_mission_order
+msgid "Créez un nouvel ordre de mission."
+msgstr "Create a new mission order."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__currency_id
+msgid "Currency"
+msgstr "Currency"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Date approbation"
+msgstr "Approval date"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__approval_date
+msgid "Date d'approbation"
+msgstr "Approval date"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__request_date
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Date demande"
+msgstr "Request date"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_stage__departure_datetime
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Date et Heure de DEPART"
+msgstr "Departure Date and Time"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_stage__return_datetime
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Date et Heure de RETOUR"
+msgstr "Return Date and Time"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__stage_ids
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Destinations"
+msgstr "Destinations"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_hr_employee_public__currency_id
+msgid "Devise"
+msgstr "Currency"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__remaining_budget
+msgid ""
+"Différence entre le budget approuvé et le montant dépensé (Budget approuvé −"
+" Dépensé). Calculé automatiquement."
+msgstr ""
+"Difference between the approved budget and the amount spent (Approved budget"
+" minus Spent). Computed automatically."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__display_name
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_stage__display_name
+msgid "Display Name"
+msgstr "Display Name"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_list
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_search
+msgid "Département"
+msgstr "Department"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Dépense"
+msgstr "Expense"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Dépenses liées"
+msgstr "Linked expenses"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__spent_amount
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_list
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_list
+msgid "Dépensé"
+msgstr "Spent"
+
+#. module: xinxu_mission
+#: model:ir.model,name:xinxu_mission.model_hr_employee
+msgid "Employee"
+msgstr "Employee"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__function
+msgid "Employee's function"
+msgstr "Employee's function"
+
+#. module: xinxu_mission
+#: model:ir.model,name:xinxu_mission.model_hr_expense
+msgid "Expense"
+msgstr "Expense"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Fait à Ben Arous, le"
+msgstr "Done at Ben Arous, on"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__message_follower_ids
+msgid "Followers"
+msgstr "Followers"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Followers (Partners)"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Fonction"
+msgstr "Function"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__function
+msgid "Fonctions"
+msgstr "Function"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome icon e.g. fa-tasks"
+
+#. module: xinxu_mission
+#: model:ir.model.fields.selection,name:xinxu_mission.selection__product_template__expense_category__divers
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Frais divers"
+msgstr "Miscellaneous expenses"
+
+#. module: xinxu_mission
+#: model:ir.model.fields.selection,name:xinxu_mission.selection__mission_order__transport_mode__actual_expenses
+msgid "Frais réels"
+msgstr "Actual expenses"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__has_message
+msgid "Has Message"
+msgstr "Has Message"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__id
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_stage__id
+msgid "ID"
+msgstr "ID"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__activity_exception_icon
+msgid "Icon"
+msgstr "Icon"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icon to indicate an exception activity."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "If checked, new messages require your attention."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__message_has_error
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "If checked, some messages have a delivery error."
+
+#. module: xinxu_mission
+#: model:ir.model.fields.selection,name:xinxu_mission.selection__mission_order__personal_vehicle_reimbursement__km_allowance
+msgid "Indemnités kilométriques"
+msgstr "Mileage allowance"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Informations"
+msgstr "Information"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__message_is_follower
+msgid "Is Follower"
+msgstr "Is Follower"
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_stage.py:0
+msgid ""
+"La date de retour doit être postérieure à la date de départ (destination : "
+"%s)."
+msgstr ""
+"The return date must be later than the departure date (destination: %s)."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/hr_expense.py:0
+msgid ""
+"La note de frais « %(expense)s » ne peut être liée qu'à un ordre de mission "
+"de son propre employé (mission %(mission)s)."
+msgstr ""
+"The expense entry “%(expense)s” can only be linked to a mission order "
+"belonging to its own employee (mission %(mission)s)."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__write_uid
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_stage__write_uid
+msgid "Last Updated by"
+msgstr "Last Updated by"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__write_date
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_stage__write_date
+msgid "Last Updated on"
+msgstr "Last Updated on"
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Le budget approuvé ne peut être négatif."
+msgstr "The approved budget cannot be negative."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"Les champs d'approbation (%s) sont réservés aux responsables de mission."
+msgstr "The approval fields (%s) are reserved for mission managers."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_stage.py:0
+msgid ""
+"Les destinations d'un ordre de mission approuvé ne peuvent plus être "
+"modifiées (%s)."
+msgstr ""
+"The destinations of an approved mission order can no longer be modified "
+"(%s)."
+
+#. module: xinxu_mission
+#: model_terms:ir.actions.act_window,help:xinxu_mission.action_mission_order
+msgid ""
+"Les ordres de mission permettent de demander et suivre les déplacements professionnels.\n"
+"                Les notes de frais peuvent être liées à un ordre de mission approuvé."
+msgstr ""
+"Mission orders let you request and track business trips.\n"
+"                Expense entries can be linked to an approved mission order."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_stage__destination
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Lieu de Destination"
+msgstr "Destination"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_stage__departure_location
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Lieu de départ"
+msgstr "Departure location"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_stage__return_location
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Lieu de retour"
+msgstr "Return location"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Lieux"
+msgstr "Locations"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__vehicle_brand
+msgid "Marque"
+msgstr "Make"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Marque :"
+msgstr "Make:"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__message_has_error
+msgid "Message Delivery error"
+msgstr "Message Delivery error"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__message_ids
+msgid "Messages"
+msgstr "Messages"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_stage__mission_id
+msgid "Mission"
+msgstr "Mission"
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Mission '%s' has been approved by %s."
+msgstr "Mission '%s' has been approved by %s."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Mission '%s' has been refused by %s."
+msgstr "Mission '%s' has been refused by %s."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Mission '%s' has been submitted by %s."
+msgstr "Mission '%s' has been submitted by %s."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Mission Approved"
+msgstr "Mission Approved"
+
+#. module: xinxu_mission
+#: model:res.groups,name:xinxu_mission.group_mission_manager
+msgid "Mission Manager"
+msgstr "Mission Manager"
+
+#. module: xinxu_mission
+#: model:ir.model,name:xinxu_mission.model_mission_order
+msgid "Mission Order"
+msgstr "Mission Order"
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Mission Refused"
+msgstr "Mission Refused"
+
+#. module: xinxu_mission
+#: model:ir.model,name:xinxu_mission.model_mission_stage
+msgid "Mission Stage"
+msgstr "Mission Stage"
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Mission Submitted"
+msgstr "Mission Submitted"
+
+#. module: xinxu_mission
+#: model:res.groups,name:xinxu_mission.group_mission_user
+msgid "Mission User"
+msgstr "Mission User"
+
+#. module: xinxu_mission
+#: model:ir.ui.menu,name:xinxu_mission.menu_mission_root
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Missions"
+msgstr "Missions"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_hr_employee_public__mission_approved_count
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_list
+msgid "Missions approuvées"
+msgstr "Approved missions"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__particular_modalities
+msgid "Modalités particulières"
+msgstr "Special conditions"
+
+#. module: xinxu_mission
+#: model:ir.actions.act_window,name:xinxu_mission.action_employee_mission_budget_own
+#: model:ir.ui.menu,name:xinxu_mission.menu_employee_mission_budget_own
+msgid "Mon Budget Mission"
+msgstr "My Mission Budget"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__estimated_costs
+msgid ""
+"Montant estimé des dépenses de la mission, renseigné par l'employé avant "
+"validation."
+msgstr ""
+"Estimated amount of the mission's expenses, entered by the employee before "
+"approval."
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Motif"
+msgstr "Purpose"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__purpose
+msgid "Motif du déplacement"
+msgstr "Purpose of travel"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Motif et transport"
+msgstr "Purpose and transport"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__transport_mode
+msgid "Moyen de transport"
+msgstr "Means of transport"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "My Activity Deadline"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_hr_employee__mission_count
+#: model:ir.model.fields,field_description:xinxu_mission.field_hr_employee_public__mission_count
+msgid "Nb missions"
+msgstr "Nb. missions"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_list
+msgid "Nb missions (total)"
+msgstr "Nb. missions (total)"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Next Activity Calendar Event"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Next Activity Deadline"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__activity_summary
+msgid "Next Activity Summary"
+msgstr "Next Activity Summary"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__activity_type_id
+msgid "Next Activity Type"
+msgstr "Next Activity Type"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__accompanied_by
+msgid ""
+"Nom des personnes accompagnant l'employé lors de la mission, le cas échéant."
+msgstr ""
+"Name(s) of the person(s) accompanying the employee during the mission, if "
+"applicable."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__employee_id
+msgid "Nom, Prénom"
+msgstr "Name, First name"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_hr_employee_public__mission_approved_count
+msgid "Nombre de missions en état 'Approuvé'."
+msgstr "Number of missions in the 'Approved' state."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_hr_employee__mission_count
+#: model:ir.model.fields,help:xinxu_mission.field_hr_employee_public__mission_count
+msgid "Nombre total d'ordres de mission (tous états confondus)."
+msgstr "Total number of mission orders (all states combined)."
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Note de frais"
+msgstr "Expense entry"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__expense_ids
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Notes de frais"
+msgstr "Expense entries"
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Notes de frais détachées"
+msgstr "Expense entries detached"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__expense_ids
+msgid ""
+"Notes de frais liées à cette mission. Une note de frais ne peut être "
+"rattachée qu'à une mission approuvée et doit appartenir au même employé."
+msgstr ""
+"Expense entries linked to this mission. An expense entry can only be "
+"attached to an approved mission and must belong to the same employee."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Number of Actions"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__message_has_error_counter
+msgid "Number of errors"
+msgstr "Number of errors"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Number of messages requiring action"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Number of messages with delivery error"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__vehicle_plate
+msgid "N° Immatriculation"
+msgstr "License Plate No."
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "ORDRE DE MISSION"
+msgstr "MISSION ORDER"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_hr_expense__mission_id
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Ordre de mission"
+msgstr "Mission order"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__is_mission_owner
+msgid "Ordre de mission personnel"
+msgstr "Personal mission order"
+
+#. module: xinxu_mission
+#: model:ir.actions.act_window,name:xinxu_mission.action_mission_order
+#: model:ir.model.fields,field_description:xinxu_mission.field_hr_employee_public__mission_ids
+#: model:ir.ui.menu,name:xinxu_mission.menu_mission_order
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_list
+msgid "Ordres de mission"
+msgstr "Mission orders"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_hr_employee_public__mission_budget_usage
+msgid "Part du budget approuvé déjà dépensée, en pourcentage."
+msgstr "Share of the approved budget already spent, as a percentage."
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_list
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_search
+msgid "Poste"
+msgstr "Position"
+
+#. module: xinxu_mission
+#: model:ir.model,name:xinxu_mission.model_product_template
+msgid "Product"
+msgstr "Product"
+
+#. module: xinxu_mission
+#: model:ir.model,name:xinxu_mission.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Public Employee"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__rating_ids
+msgid "Ratings"
+msgstr "Ratings"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_search
+msgid "Recherche collaborateurs"
+msgstr "Search employees"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__name
+msgid "Reference"
+msgstr "Reference"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Refuser"
+msgstr "Refuse"
+
+#. module: xinxu_mission
+#: model:ir.model.fields.selection,name:xinxu_mission.selection__mission_order__state__refused
+msgid "Refusé"
+msgstr "Refused"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_search
+msgid "Regrouper par"
+msgstr "Group By"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Remboursement :"
+msgstr "Reimbursement:"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__personal_vehicle_reimbursement
+msgid "Remboursement véhicule personnel"
+msgstr "Personal vehicle reimbursement"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Remettre en brouillon"
+msgstr "Reset to draft"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__manager_id
+msgid "Responsable approbateur"
+msgstr "Approving manager"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__is_mission_manager
+msgid "Responsable de mission"
+msgstr "Mission manager"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__activity_user_id
+msgid "Responsible User"
+msgstr "Responsible User"
+
+#. module: xinxu_mission
+#: model:ir.model.fields.selection,name:xinxu_mission.selection__product_template__expense_category__restauration
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Restauration"
+msgstr "Meals"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__remaining_budget
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_list
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_list
+msgid "Reste"
+msgstr "Remaining"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_hr_employee_public__mission_total_remaining
+msgid "Reste budget"
+msgstr "Remaining budget"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Référence"
+msgstr "Reference"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__personal_address
+msgid "Résidence personnelle"
+msgstr "Personal residence"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS Delivery error"
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"Seul le demandeur de l'ordre de mission %s peut effectuer cette action."
+msgstr "Only the requester of mission order %s can perform this action."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"Seul un ordre de mission approuvé peut voir son approbation annulée (%s)."
+msgstr "Only an approved mission order can have its approval cancelled (%s)."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Seul un ordre de mission en brouillon peut être soumis (%s)."
+msgstr "Only a draft mission order can be submitted (%s)."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Seul un ordre de mission refusé peut être remis en brouillon (%s)."
+msgstr "Only a refused mission order can be reset to draft (%s)."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Seul un ordre de mission soumis peut être approuvé (%s)."
+msgstr "Only a submitted mission order can be approved (%s)."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Seul un ordre de mission soumis peut être refusé (%s)."
+msgstr "Only a submitted mission order can be refused (%s)."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"Seul un responsable de mission peut approuver, refuser ou annuler "
+"l'approbation d'un ordre de mission (%s)."
+msgstr ""
+"Only a mission manager can approve, refuse, or cancel the approval of a "
+"mission order (%s)."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"Seuls les ordres de mission en brouillon ou refusés peuvent être supprimés "
+"(%s). Un ordre soumis ou approuvé fait partie de l'historique d'approbation."
+msgstr ""
+"Only draft or refused mission orders can be deleted (%s). A submitted or "
+"approved order is part of the approval history."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_hr_employee_public__mission_total_approved_budget
+msgid "Somme des budgets approuvés des missions en état 'Approuvé'."
+msgstr "Sum of the approved budgets of missions in the 'Approved' state."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_hr_employee_public__mission_total_spent
+msgid "Somme des montants dépensés sur toutes les missions approuvées."
+msgstr "Sum of the amounts spent across all approved missions."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__spent_amount
+msgid ""
+"Somme des notes de frais validées (état Approuvé ou Payé) liées à cette "
+"mission. Calculé automatiquement."
+msgstr ""
+"Sum of the validated expense entries (state Approved or Paid) linked to this"
+" mission. Computed automatically."
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Soumettre"
+msgstr "Submit"
+
+#. module: xinxu_mission
+#: model:ir.model.fields.selection,name:xinxu_mission.selection__mission_order__state__submitted
+msgid "Soumis"
+msgstr "Submitted"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__state
+msgid "State"
+msgstr "State"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+
+#. module: xinxu_mission
+#: model:ir.model.fields.selection,name:xinxu_mission.selection__mission_order__personal_vehicle_reimbursement__public_transport_rate
+msgid "Tarif transport public le moins onéreux"
+msgstr "Cheapest public transport rate"
+
+#. module: xinxu_mission
+#: model:ir.model.fields.selection,name:xinxu_mission.selection__mission_order__transport_mode__public_transport
+msgid "Titres de transport"
+msgstr "Public transport tickets"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__total_expenses
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Total"
+msgstr "Total"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__total_divers
+msgid "Total Frais divers"
+msgstr "Total miscellaneous expenses"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__total_restauration
+msgid "Total Restauration"
+msgstr "Total meals"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__total_transport
+msgid "Total Transport"
+msgstr "Total transport"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Total budget"
+msgstr "Total budget"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_hr_employee_public__mission_total_spent
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Total dépensé"
+msgstr "Total spent"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Total missions"
+msgstr "Total missions"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Total restant"
+msgstr "Total remaining"
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"Transition d'état non autorisée : « %(old)s » → « %(new)s » (%(mission)s)."
+msgstr "State transition not allowed: “%(old)s” → “%(new)s” (%(mission)s)."
+
+#. module: xinxu_mission
+#: model:ir.model.fields.selection,name:xinxu_mission.selection__product_template__expense_category__transport
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Transport"
+msgstr "Transport"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Type of the exception activity on record."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Un nouvel ordre de mission doit être créé à l'état brouillon."
+msgstr "A new mission order must be created in the draft state."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"Un ordre de mission approuvé ne peut plus être modifié (%s). Demandez à un "
+"responsable d'annuler l'approbation."
+msgstr ""
+"An approved mission order can no longer be modified (%s). Ask a manager to "
+"cancel the approval."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/hr_expense.py:0
+msgid ""
+"Une note de frais ne peut être liée qu'à un ordre de mission approuvé "
+"(mission %s)."
+msgstr ""
+"An expense entry can only be linked to an approved mission order (mission "
+"%s)."
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_employee_mission_budget_form
+msgid "Utilisation du budget"
+msgstr "Budget usage"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_hr_employee_public__mission_budget_usage
+msgid "Utilisation du budget (%)"
+msgstr "Budget usage (%)"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Visa demandeur : ____________________"
+msgstr "Requester's signature: ____________________"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "Visa responsable : ____________________"
+msgstr "Manager's signature: ____________________"
+
+#. module: xinxu_mission
+#: model_terms:ir.actions.act_window,help:xinxu_mission.action_employee_mission_budget_own
+msgid ""
+"Votre fiche employée n'est pas encore configurée.\n"
+"                Contactez l'administrateur RH."
+msgstr ""
+"Your employee record is not yet configured.\n"
+"                Contact the HR administrator."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"Vous ne pouvez créer ou modifier un ordre de mission que pour votre fiche "
+"employé liée à ce compte. Dans Employés, ouvrez votre fiche et renseignez le"
+" champ « Utilisateur » avec cet utilisateur, puis enregistrez."
+msgstr ""
+"You can only create or edit a mission order for your own employee record "
+"linked to this account. In Employees, open your record and set the “User” "
+"field to this user, then save."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"Vous ne pouvez pas annuler l'approbation de votre propre ordre de mission."
+msgstr "You cannot cancel the approval of your own mission order."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Vous ne pouvez pas approuver votre propre ordre de mission."
+msgstr "You cannot approve your own mission order."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"Vous ne pouvez pas approuver, refuser ou annuler l'approbation de votre "
+"propre ordre de mission (%s)."
+msgstr ""
+"You cannot approve, refuse, or cancel the approval of your own mission order"
+" (%s)."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid "Vous ne pouvez pas refuser votre propre ordre de mission."
+msgstr "You cannot refuse your own mission order."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"Vous ne pouvez remettre en brouillon que vos propres ordres de mission."
+msgstr "You can only reset your own mission orders to draft."
+
+#. module: xinxu_mission
+#. odoo-python
+#: code:addons/xinxu_mission/models/mission_order.py:0
+msgid ""
+"Vous ne pouvez soumettre que vos propres ordres de mission. Choisissez votre"
+" employé dans « Nom, Prénom »."
+msgstr ""
+"You can only submit your own mission orders. Select your employee in “Name, "
+"First name”."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__is_mission_owner
+msgid "Vrai si l'employé de la mission est lié à l'utilisateur courant."
+msgstr "True if the mission's employee is linked to the current user."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__is_mission_manager
+msgid ""
+"Vrai si l'utilisateur courant appartient au groupe Responsable de mission."
+msgstr "True if the current user belongs to the Mission Manager group."
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__is_system_admin
+msgid "Vrai si l'utilisateur courant est administrateur système."
+msgstr "True if the current user is a system administrator."
+
+#. module: xinxu_mission
+#: model:ir.model.fields.selection,name:xinxu_mission.selection__mission_order__transport_mode__vehicle_service
+msgid "Véhicule de service"
+msgstr "Company vehicle"
+
+#. module: xinxu_mission
+#: model:ir.model.fields.selection,name:xinxu_mission.selection__mission_order__transport_mode__personal_vehicle
+msgid "Véhicule personnel"
+msgstr "Personal vehicle"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,field_description:xinxu_mission.field_mission_order__website_message_ids
+msgid "Website Messages"
+msgstr "Website Messages"
+
+#. module: xinxu_mission
+#: model:ir.model.fields,help:xinxu_mission.field_mission_order__website_message_ids
+msgid "Website communication history"
+msgstr "Website communication history"
+
+#. module: xinxu_mission
+#: model:ir.module.category,name:xinxu_mission.module_category_xinxu_mission
+msgid "XINXU - Missions"
+msgstr "XINXU - Missions"
+
+#. module: xinxu_mission
+#: model:ir.module.category,description:xinxu_mission.module_category_xinxu_mission
+msgid "XINXU Mission Orders"
+msgstr "XINXU Mission Orders"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Étape"
+msgstr "Stage"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.view_mission_order_form
+msgid "Étapes"
+msgstr "Stages"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "— N° Immatriculation :"
+msgstr "— License Plate No.:"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "☑ Autorisation d'utilisation d'un véhicule de service"
+msgstr "☑ Authorization to use a company vehicle"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "☑ Autorisation d'utilisation du véhicule personnel :"
+msgstr "☑ Authorization to use a personal vehicle:"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid "☑ Prise en charge des frais réels (mission exceptionnelle)"
+msgstr "☑ Coverage of actual expenses (exceptional mission)"
+
+#. module: xinxu_mission
+#: model_terms:ir.ui.view,arch_db:xinxu_mission.report_mission_order_template
+msgid ""
+"☑ Prise en charge des titres de transport sur la base du transport le moins "
+"onéreux"
+msgstr ""
+"☑ Coverage of transport tickets based on the cheapest available transport"
