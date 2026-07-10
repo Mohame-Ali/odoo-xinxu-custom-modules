@@ -42,15 +42,48 @@
         <field name="perm_unlink" eval="True"/>
     </record>
 
-    <!-- Expenses: restrict linking to own missions only -->
-    <record id="rule_expense_own_mission" model="ir.rule">
-        <field name="name">Expense: own mission only</field>
-        <field name="model_id" ref="hr_expense.model_hr_expense"/>
+    <record id="rule_mission_stage_user_own" model="ir.rule">
+        <field name="name">Mission stage: own mission only</field>
+        <field name="model_id" ref="model_mission_stage"/>
         <field name="domain_force">[('mission_id.employee_id', 'in', user.employee_ids.ids)]</field>
         <field name="groups" eval="[(4, ref('group_mission_user'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_mission_stage_manager_all" model="ir.rule">
+        <field name="name">Mission stage: manager all</field>
+        <field name="model_id" ref="model_mission_stage"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_mission_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+
+    <record id="rule_expense_own_mission" model="ir.rule">
+        <field name="name">Expense: own mission only</field>
+        <field name="model_id" ref="hr_expense.model_hr_expense"/>
+        <field name="domain_force">[('mission_id.employee_id', 'in', user.employee_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('group_mission_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_expense_mission_manager_read" model="ir.rule">
+        <field name="name">Expense: mission manager read linked expenses</field>
+        <field name="model_id" ref="hr_expense.model_hr_expense"/>
+        <field name="domain_force">[('mission_id', '!=', False)]</field>
+        <field name="groups" eval="[(4, ref('group_mission_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
 </odoo>
