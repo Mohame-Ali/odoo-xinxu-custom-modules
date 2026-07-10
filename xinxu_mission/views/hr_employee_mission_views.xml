@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Smart button in the HR app: this form targets hr.employee, which is
+         only visible to HR officers, so it stays on hr.employee. -->
     <record id="view_hr_employee_form_mission_button" model="ir.ui.view">
         <field name="name">hr.employee.form.mission.button</field>
         <field name="model">hr.employee</field>
@@ -23,10 +25,15 @@
         </field>
     </record>
 
+    <!-- ==================================================================
+         Budget views: hr.employee.public, the employee model readable by
+         EVERY internal user (hr.employee requires the HR Officer group and
+         made both budget menus crash with an AccessError).
+         ================================================================== -->
 
     <record id="view_employee_mission_budget_list" model="ir.ui.view">
-        <field name="name">hr.employee.mission.budget.list</field>
-        <field name="model">hr.employee</field>
+        <field name="name">hr.employee.public.mission.budget.list</field>
+        <field name="model">hr.employee.public</field>
         <field name="arch" type="xml">
             <list string="Budget Missions par Collaborateur"
                   decoration-danger="mission_total_remaining &lt; 0"
@@ -44,17 +51,14 @@
 
                 <field name="mission_total_approved_budget"
                        string="Budget approuvé"
-                       sum="Total budget"
                        widget="monetary"
                        options="{'currency_field': 'currency_id'}"/>
                 <field name="mission_total_spent"
                        string="Dépensé"
-                       sum="Total dépensé"
                        widget="monetary"
                        options="{'currency_field': 'currency_id'}"/>
                 <field name="mission_total_remaining"
                        string="Reste"
-                       sum="Total restant"
                        widget="monetary"
                        options="{'currency_field': 'currency_id'}"/>
 
@@ -63,10 +67,9 @@
         </field>
     </record>
 
-
     <record id="view_employee_mission_budget_form" model="ir.ui.view">
-        <field name="name">hr.employee.mission.budget.form</field>
-        <field name="model">hr.employee</field>
+        <field name="name">hr.employee.public.mission.budget.form</field>
+        <field name="model">hr.employee.public</field>
         <field name="arch" type="xml">
             <form string="Budget Missions — Collaborateur">
                 <sheet>
@@ -108,31 +111,14 @@
                         </group>
                     </group>
 
-                    <!-- ── Budget progress bar ── -->
                     <group string="Utilisation du budget">
-                        <div class="o_field_widget" colspan="2"
-                             invisible="mission_total_approved_budget == 0">
-                            <div class="progress" style="height: 20px; margin: 8px 0;">
-                                <div class="progress-bar bg-success"
-                                     style="width: 100%; transition: none;"
-                                     role="progressbar"/>
-                            </div>
-                            <p class="text-muted" style="font-size: 12px;">
-                                Budget approuvé :
-                                <field name="mission_total_approved_budget"
-                                       widget="monetary"
-                                       options="{'currency_field': 'currency_id'}"
-                                       readonly="1"/>
-                                — Dépensé :
-                                <field name="mission_total_spent"
-                                       widget="monetary"
-                                       options="{'currency_field': 'currency_id'}"
-                                       readonly="1"/>
-                            </p>
-                        </div>
+                        <field name="mission_budget_usage"
+                               widget="progressbar"
+                               nolabel="1"
+                               colspan="2"
+                               invisible="mission_total_approved_budget == 0"/>
                     </group>
 
-                    <!-- ── Missions list ── -->
                     <notebook>
                         <page string="Ordres de mission" name="missions">
                             <field name="mission_ids"
@@ -145,40 +131,13 @@
                                       decoration-info="state == 'submitted'">
                                     <field name="name" string="Référence"/>
                                     <field name="request_date" string="Date demande"/>
+                                    <field name="approval_date" string="Date approbation" optional="show"/>
                                     <field name="purpose" string="Motif"/>
                                     <field name="state"
                                            widget="badge"
                                            decoration-danger="state == 'refused'"
                                            decoration-success="state == 'approved'"
                                            decoration-info="state == 'submitted'"/>
-                                    <field name="approved_budget"
-                                           string="Budget approuvé"
-                                           widget="monetary"
-                                           options="{'currency_field': 'currency_id'}"/>
-                                    <field name="spent_amount"
-                                           string="Dépensé"
-                                           widget="monetary"
-                                           options="{'currency_field': 'currency_id'}"/>
-                                    <field name="remaining_budget"
-                                           string="Reste"
-                                           widget="monetary"
-                                           options="{'currency_field': 'currency_id'}"/>
-                                    <field name="currency_id" column_invisible="1"/>
-                                </list>
-                            </field>
-                        </page>
-
-                        <page string="Missions approuvées" name="approved_missions">
-                            <field name="mission_ids"
-                                   domain="[('state', '=', 'approved')]"
-                                   mode="list"
-                                   nolabel="1"
-                                   readonly="1">
-                                <list string="Missions approuvées">
-                                    <field name="name" string="Référence"/>
-                                    <field name="request_date" string="Date demande"/>
-                                    <field name="approval_date" string="Date approbation"/>
-                                    <field name="purpose" string="Motif"/>
                                     <field name="approved_budget"
                                            string="Budget approuvé"
                                            sum="Total budget"
@@ -205,25 +164,24 @@
     </record>
 
     <record id="view_employee_mission_budget_search" model="ir.ui.view">
-        <field name="name">hr.employee.mission.budget.search</field>
-        <field name="model">hr.employee</field>
+        <field name="name">hr.employee.public.mission.budget.search</field>
+        <field name="model">hr.employee.public</field>
         <field name="arch" type="xml">
             <search string="Recherche collaborateurs">
                 <field name="name" string="Collaborateur"/>
                 <field name="department_id"/>
                 <field name="job_id"/>
 
-                <!-- Filters -->
                 <filter string="Avec missions approuvées"
                         name="has_approved_missions"
-                        domain="[('mission_approved_count', '&gt;', 0)]"/>
+                        domain="[('mission_ids.state', '=', 'approved')]"/>
                 <filter string="Budget dépassé"
                         name="budget_exceeded"
                         domain="[('mission_total_remaining', '&lt;', 0)]"/>
                 <filter string="Budget épuisé"
                         name="budget_zero"
                         domain="[('mission_total_remaining', '=', 0),
-                                  ('mission_approved_count', '&gt;', 0)]"/>
+                                  ('mission_ids.state', '=', 'approved')]"/>
 
                 <!-- Group by -->
                 <group expand="0" string="Regrouper par">
@@ -239,7 +197,7 @@
     <!-- Manager action — all employees -->
     <record id="action_employee_mission_budget_manager" model="ir.actions.act_window">
         <field name="name">Budget par Collaborateur</field>
-        <field name="res_model">hr.employee</field>
+        <field name="res_model">hr.employee.public</field>
         <field name="view_mode">list,form</field>
         <field name="view_ids"
                eval="[(5, 0, 0),
@@ -259,7 +217,7 @@
     <!-- User action — own employee record only -->
     <record id="action_employee_mission_budget_own" model="ir.actions.act_window">
         <field name="name">Mon Budget Mission</field>
-        <field name="res_model">hr.employee</field>
+        <field name="res_model">hr.employee.public</field>
         <field name="view_mode">list,form</field>
         <field name="domain">[('user_id', '=', uid)]</field>
         <field name="view_ids"
